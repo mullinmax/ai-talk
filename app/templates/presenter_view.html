@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Presenter View</title>
+</head>
+<body>
+    <h1>Presenter Dashboard</h1>
+    <p>Here are the topics by votes:</p>
+    <ul>
+    {% for item in sorted_topics %}
+        <li>{{ item[0] }} — {{ item[1] }} votes</li>
+    {% endfor %}
+    </ul>
+
+    <h2>Select the Next Topic</h2>
+    <form action="/select_topic" method="post">
+        <select name="topic">
+        {% for item in sorted_topics %}
+            <option value="{{ item[0] }}">{{ item[0] }} ({{ item[1] }})</option>
+        {% endfor %}
+        </select>
+        <button type="submit">Proceed</button>
+    </form>
+</body>
+</html>
