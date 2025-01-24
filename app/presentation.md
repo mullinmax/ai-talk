@@ -1,23 +1,40 @@
-# Category: Introduction
+# Category: Cover
+## 0: Introduction
+### Slide: Welcome
+Welcome to our AI Talk!  
+We'll let the audience vote on which topics to explore.
 
-## Slide 1
-**Welcome to Our AI Talk**  
-- Quick overview  
-- Interaction with the audience  
-
-## Slide 2
-**Agenda**  
-1. Introduction  
-2. Voting & Topics  
-3. Demo
+### Slide: Agenda
+1. We'll show an interactive Jeopardy grid.  
+2. Audience votes on topics.  
+3. Presenter can navigate slides.
 
 # Category: AI Basics
+## 200: Machine Learning Intro
+### Slide: Definition
+Machine Learning is about training models from data.
+### Slide: Types
+- Supervised  
+- Unsupervised  
 
-## Slide 1
-**What is AI?**  
-- Definition and scope
+## 400: Neural Networks
+### Slide: Intro
+Neural networks mimic the structure of the brain...
+### Slide: Backprop
+Key concept: backpropagation.
 
-## Slide 2
-**Machine Learning**  
-- Supervised vs. unsupervised  
-- Real-world examples
+# Category: Applications
+## 200: Computer Vision
+### Slide: Examples
+Detecting objects in images, face recognition, etc.
+### Slide: Tools
+- OpenCV  
+- TensorFlow
+
+## 400: ChatGPT Use Cases
+### Slide: Overview
+Large Language Models can:
+- Summarize text
+- Answer questions
+### Slide: Limitations
+Potential issues with hallucinations, bias, etc.

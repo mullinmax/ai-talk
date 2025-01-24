@@ -5,164 +5,284 @@ from fastapi.templating import Jinja2Templates
 import markdown
 import re
 import os
+from typing import Dict, Set, Tuple
 
 app = FastAPI()
 
-# Mount static directory for JS/CSS
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
-
-# Jinja2 templates
 templates = Jinja2Templates(directory="app/templates")
 
-# In-memory data store for topics and votes
-topics = {
-    "Topic 1": 0,
-    "Topic 2": 0,
-    "Topic 3": 0,
-    "Topic 4": 0,
-    "Topic 5": 0
-}
+##########################################################
+#   1) Parse the Markdown into a Jeopardy-like structure
+##########################################################
 
-# =========================
-# 1) Parse Markdown slides
-# =========================
+# Each topic dict has: {
+#   "category": "AI Basics",
+#   "points": 200,
+#   "title": "Machine Learning Intro",
+#   "slides": [
+#       { "slide_title": "Definition", "slide_html": "<p>...</p>" },
+#       { "slide_title": "Types", "slide_html": "<ul>...</ul>" }
+#   ]
+# }
+presentation_data = []            # All topics
+categories_order = []             # Keep track of category order
+category_points_map = {}          # { "AI Basics": set([200,400]) , ... }
+lookup_map = {}                   # (cat, points) -> index in presentation_data
 
-# We'll parse the markdown file "presentation.md" and store slides in a list.
-# Example approach: Split on '##' to find each slide after a category heading '#'
-# This is just one simplistic approach. You might refine the regex or parsing logic.
-slides = []  # Will store slide dicts: { "category": "Intro", "title": "Slide 1", "content": "...HTML..." }
-
-def parse_presentation_file():
+def parse_presentation():
     md_path = os.path.join(os.path.dirname(__file__), "presentation.md")
     if not os.path.exists(md_path):
+        print("presentation.md not found!")
         return
 
     with open(md_path, "r", encoding="utf-8") as f:
-        raw_markdown = f.read()
+        raw_md = f.read()
 
-    # One naive approach: first split by single '# ' lines for categories,
-    # then split by '## ' lines for slides. We'll store them all.
-    # For maximum flexibility, you might do a full markdown AST parse. This is just a skeleton.
-    category_blocks = re.split(r"(?m)^# ", raw_markdown)
-    # The first chunk might be empty if file starts with "#".
+    # Split by lines matching "# Category: "
+    category_blocks = re.split(r"(?m)^# Category:\s*", raw_md)
     for block in category_blocks:
         block = block.strip()
         if not block:
             continue
-        # The first line in this block is the category
         lines = block.splitlines()
-        category_title = lines[0].replace("Category: ", "").strip()
+        category_name = lines[0].strip()  # e.g. "AI Basics"
+        if category_name not in categories_order:
+            categories_order.append(category_name)
+
         remainder = "\n".join(lines[1:])
-
-        # Now split remainder by "## " for each slide
-        slide_blocks = re.split(r"(?m)^## ", remainder)
-        for s_block in slide_blocks:
-            s_block = s_block.strip()
-            if not s_block:
+        # Now parse each "## X: Title"
+        section_blocks = re.split(r"(?m)^##\s*", remainder)
+        for sb in section_blocks:
+            sb = sb.strip()
+            if not sb:
                 continue
-            s_lines = s_block.splitlines()
-            slide_title = s_lines[0].strip()
-            slide_content_md = "\n".join(s_lines[1:])
-            # Convert MD to HTML for display
-            slide_content_html = markdown.markdown(slide_content_md, extensions=["fenced_code", "tables"])
+            sublines = sb.splitlines()
+            header = sublines[0].strip()  # e.g. "200: Machine Learning Intro"
+            match = re.match(r"(\d+)\s*:\s*(.*)", header)
+            if match:
+                points_str, topic_title = match.groups()
+                points = int(points_str.strip())
+                body_md = "\n".join(sublines[1:])
+                # Parse "### Slide: Slide Title" inside
+                slides_list = parse_sub_slides(body_md)
+
+                presentation_data.append({
+                    "category": category_name,
+                    "points": points,
+                    "title": topic_title.strip(),
+                    "slides": slides_list
+                })
+                # Track categories + points
+                if category_name not in category_points_map:
+                    category_points_map[category_name] = set()
+                category_points_map[category_name].add(points)
+
+def parse_sub_slides(topic_md: str):
+    """
+    Looks for lines like "### Slide: Something"
+    Returns a list of {slide_title, slide_html}
+    If no sub-slides found, treat entire block as one slide.
+    """
+    # Split on "### Slide:"
+    parts = re.split(r"(?m)^###\s*Slide:\s*", topic_md)
+    slides = []
+    if len(parts) > 1:
+        # first part might be empty or leftover text
+        # each subsequent part starts with a line "Title\nrestOfMd"
+        # we'll parse them
+        for i, block in enumerate(parts):
+            if i == 0:
+                # leftover text before the first ### Slide
+                # if there's any content, treat it as a "generic" slide
+                leftover = block.strip()
+                if leftover:
+                    # let's call it "Overview"
+                    slides.append({
+                        "slide_title": "Overview",
+                        "slide_html": markdown.markdown(leftover, extensions=["fenced_code", "tables"])
+                    })
+                continue
+            lines = block.splitlines()
+            stitle = lines[0].strip()  # e.g. "Welcome"
+            sbody = "\n".join(lines[1:])
+            shtml = markdown.markdown(sbody, extensions=["fenced_code", "tables"])
             slides.append({
-                "category": category_title,
-                "title": slide_title,
-                "content": slide_content_html
+                "slide_title": stitle,
+                "slide_html": shtml
             })
+    else:
+        # No sub-slide headings. The entire block is one slide
+        shtml = markdown.markdown(topic_md, extensions=["fenced_code", "tables"])
+        slides.append({
+            "slide_title": "Slide",
+            "slide_html": shtml
+        })
+    return slides
 
-# Parse the file on startup
-parse_presentation_file()
+parse_presentation()
 
-# Keep a global pointer to the current slide index
-current_slide_index = 0 if slides else -1  # -1 if no slides available
+# Sort topics by (category_order, points)
+presentation_data.sort(key=lambda x: (categories_order.index(x["category"]), x["points"]))
 
-# ====================
-# Audience (was senior_view)
-# ====================
+# Build a lookup map
+for i, item in enumerate(presentation_data):
+    cat = item["category"]
+    pts = item["points"]
+    lookup_map[(cat, pts)] = i
+
+# =====================================
+#   2) Vote toggles (IP-based, naive)
+# =====================================
+votes: Dict[Tuple[str, int], Set[str]] = {}
+
+def get_client_ip(request: Request) -> str:
+    forwarded = request.headers.get("X-Forwarded-For")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    return request.client.host
+
+# ======================================
+#   3) Current display: topic + slide
+# ======================================
+# We'll start on a "cover" if it exists. (cat="Cover", points=0)
+# Otherwise, -1 means "no selection."
+default_cover_index = next((i for i, t in enumerate(presentation_data)
+                            if t["category"] == "Cover" and t["points"] == 0), -1)
+current_index = default_cover_index if default_cover_index != -1 else -1
+slide_position = 0  # which slide within that topic
+
+#################################
+#       Audience View
+#################################
 @app.get("/audience_view", response_class=HTMLResponse)
 async def get_audience_view(request: Request):
     """
-    View for audience to cast votes.
+    Display the Jeopardy table with clickable vote buttons.
     """
-    return templates.TemplateResponse("audience_view.html", {"request": request, "topics": topics})
+    return templates.TemplateResponse("audience_view.html", {
+        "request": request,
+        "categories_order": categories_order,
+        "category_points_map": category_points_map
+    })
 
-@app.post("/vote", response_class=HTMLResponse)
-async def post_vote(topic: str = Form(...)):
+@app.get("/api/vote_data")
+async def api_vote_data():
     """
-    Handle voting for a given topic.
+    Return a structure with categories & points & vote counts
+    e.g. { "AI Basics": {200: <count>, 400: <count>}, ... }
     """
-    if topic in topics:
-        topics[topic] += 1
-    return RedirectResponse(url="/audience_view", status_code=303)
+    data = {}
+    for cat in categories_order:
+        data[cat] = {}
+        if cat in category_points_map:
+            for pts in sorted(category_points_map[cat]):
+                key = (cat, pts)
+                data[cat][pts] = len(votes.get(key, set()))
+    return data
 
-# ====================
-# Presenter View
-# ====================
+@app.post("/api/toggle_vote")
+async def toggle_vote(request: Request, category: str = Form(...), points: int = Form(...)):
+    ip = get_client_ip(request)
+    key = (category, points)
+    if key not in votes:
+        votes[key] = set()
+    if ip in votes[key]:
+        votes[key].remove(ip)  # un-vote
+    else:
+        votes[key].add(ip)     # vote
+    return {"status": "ok", "voteCount": len(votes[key])}
+
+#################################
+#       Presenter View
+#################################
 @app.get("/presenter_view", response_class=HTMLResponse)
 async def get_presenter_view(request: Request):
     """
-    Presenter sees real-time tallies, can select slide navigation.
+    Shows the same table with vote counts, plus a way to select a topic
+    and also next/previous slide buttons.
     """
-    return templates.TemplateResponse("presenter_view.html", {"request": request})
+    return templates.TemplateResponse("presenter_view.html", {
+        "request": request,
+        "categories_order": categories_order,
+        "category_points_map": category_points_map
+    })
 
-@app.get("/api/votes")
-async def api_votes():
+@app.post("/api/select_topic")
+async def select_topic(category: str = Form(...), points: int = Form(...)):
     """
-    Returns the sorted topics (by votes) as JSON for polling.
+    Presenter clicks a topic. We jump the screen to that topic, slide 0.
     """
-    sorted_topics = sorted(topics.items(), key=lambda x: x[1], reverse=True)
-    return {"topics": sorted_topics}
+    global current_index, slide_position
+    idx = lookup_map.get((category, points), -1)
+    if idx != -1:
+        current_index = idx
+        slide_position = 0
+    return {"status": "ok", "selected_index": current_index, "slide_position": slide_position}
 
-@app.post("/api/slide_control")
-async def slide_control(action: str = Form(...)):
+@app.post("/api/nav_slide")
+async def nav_slide(action: str = Form(...)):
     """
-    Actions: "next", "prev", "menu" (if you want to jump back to a main menu).
-    We'll just set current_slide_index accordingly.
+    next/prev within the currently selected topic.
+    Or if you wanted global next/prev across topics, you'd do it differently.
     """
-    global current_slide_index
-    if not slides:
-        return JSONResponse({"message": "No slides loaded"}, status_code=400)
+    global current_index, slide_position
+    if current_index < 0 or current_index >= len(presentation_data):
+        return {"current_index": current_index, "slide_position": slide_position}
 
+    topic = presentation_data[current_index]
+    slides = topic["slides"]
     if action == "next":
-        if current_slide_index < len(slides) - 1:
-            current_slide_index += 1
+        if slide_position < len(slides) - 1:
+            slide_position += 1
     elif action == "prev":
-        if current_slide_index > 0:
-            current_slide_index -= 1
-    elif action == "menu":
-        # Optional logic if you want to jump to a menu slide or do something else
-        current_slide_index = 0  # or -1 to represent "no slide"
+        if slide_position > 0:
+            slide_position -= 1
 
-    return {"current_slide_index": current_slide_index}
+    return {"current_index": current_index, "slide_position": slide_position}
 
-# ====================
-# Screen View
-# ====================
+#################################
+#         Screen View
+#################################
 @app.get("/screen_view", response_class=HTMLResponse)
 async def get_screen_view(request: Request):
-    """
-    This view will show the current slide in real time (polled).
-    """
     return templates.TemplateResponse("screen_view.html", {"request": request})
 
 @app.get("/api/current_slide")
 async def api_current_slide():
     """
-    Returns the current slide (HTML) for screen_view to display.
+    Return the currently selected topic & slide.
+    If none selected, show the cover or "No Selection".
     """
-    if current_slide_index < 0 or current_slide_index >= len(slides):
-        return {"title": "No slides", "content": ""}
-    slide = slides[current_slide_index]
+    global current_index, slide_position
+    if current_index < 0 or current_index >= len(presentation_data):
+        return {
+            "title": "No Selection",
+            "content": "",
+            "slide": 0,
+            "slide_count": 0
+        }
+    topic = presentation_data[current_index]
+    slides = topic["slides"]
+    if slide_position < 0 or slide_position >= len(slides):
+        # out of range
+        return {
+            "title": topic["title"],
+            "content": "",
+            "slide": 0,
+            "slide_count": len(slides)
+        }
+    current_slide = slides[slide_position]
     return {
-        "title": slide["title"],
-        "category": slide["category"],
-        "content": slide["content"],
-        "index": current_slide_index,
-        "total": len(slides)
+        "category": topic["category"],
+        "points": topic["points"],
+        "topicTitle": topic["title"],
+        "slideTitle": current_slide["slide_title"],
+        "content": current_slide["slide_html"],
+        "slide": slide_position,
+        "slide_count": len(slides)
     }
 
-@app.get("/", response_class=HTMLResponse)
+@app.get("/")
 async def root():
-    # Redirect to audience view or presenter view, your call.
-    return RedirectResponse(url="/audience_view")
+    return RedirectResponse("/audience_view")
