@@ -6,12 +6,12 @@
 <body>
     <h1>Vote for the Next Topic</h1>
     <div>
-      {% for topic, count in topics.items() %}
+        {% for topic, count in topics.items() %}
         <form action="/vote" method="post" style="margin-bottom: 10px;">
             <input type="hidden" name="topic" value="{{ topic }}">
             <button type="submit">{{ topic }} ({{ count }} votes)</button>
         </form>
-      {% endfor %}
+        {% endfor %}
     </div>
 </body>
 </html>

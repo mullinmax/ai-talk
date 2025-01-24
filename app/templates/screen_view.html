@@ -4,11 +4,32 @@
     <title>Screen View</title>
 </head>
 <body>
-    <h1>Screen View</h1>
-    <p>This would display slides or the currently selected topic.</p>
-    <!--
-      Eventually, you'd add JS to fetch the "selected_topic" from the server
-      and update the screen accordingly, or tie into your slideshow logic.
-    -->
+    <h1 id="slide-title">Screen View</h1>
+    <div id="slide-content">Awaiting Slide...</div>
+    <p id="slide-index"></p>
+
+    <script>
+    async function fetchCurrentSlide() {
+        try {
+            let resp = await fetch('/api/current_slide');
+            let data = await resp.json();
+            // data: { title, category, content, index, total }
+            document.getElementById("slide-title").textContent = data.title || "No slides";
+            document.getElementById("slide-content").innerHTML = data.content || "No content";
+            if (data.index !== undefined && data.total !== undefined) {
+                document.getElementById("slide-index").textContent = 
+                    `Slide ${data.index + 1} / ${data.total} (Category: ${data.category})`;
+            } else {
+                document.getElementById("slide-index").textContent = "";
+            }
+        } catch(e) {
+            console.log("Error fetching current slide", e);
+        }
+    }
+
+    // Poll for the current slide every 2 seconds
+    setInterval(fetchCurrentSlide, 2000);
+    fetchCurrentSlide();
+    </script>
 </body>
 </html>

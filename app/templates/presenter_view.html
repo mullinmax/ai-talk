@@ -5,21 +5,49 @@
 </head>
 <body>
     <h1>Presenter Dashboard</h1>
-    <p>Here are the topics by votes:</p>
-    <ul>
-    {% for item in sorted_topics %}
-        <li>{{ item[0] }} — {{ item[1] }} votes</li>
-    {% endfor %}
-    </ul>
 
-    <h2>Select the Next Topic</h2>
-    <form action="/select_topic" method="post">
-        <select name="topic">
-        {% for item in sorted_topics %}
-            <option value="{{ item[0] }}">{{ item[0] }} ({{ item[1] }})</option>
-        {% endfor %}
-        </select>
-        <button type="submit">Proceed</button>
-    </form>
+    <!-- Votes section -->
+    <h2>Top Voted Topics</h2>
+    <ul id="topics-list"></ul>
+
+    <!-- Navigation Controls for Slides -->
+    <h2>Slide Navigation</h2>
+    <button onclick="slideControl('prev')">Previous</button>
+    <button onclick="slideControl('next')">Next</button>
+    <button onclick="slideControl('menu')">Back to Menu</button>
+
+    <script>
+    async function fetchVotes() {
+        try {
+            let resp = await fetch('/api/votes');
+            let data = await resp.json();
+            let topics = data.topics; // array of [topic, votes]
+            let listEl = document.getElementById('topics-list');
+            listEl.innerHTML = '';
+            topics.forEach((t) => {
+                let li = document.createElement('li');
+                li.textContent = `${t[0]} — ${t[1]} votes`;
+                listEl.appendChild(li);
+            });
+        } catch(e) {
+            console.log("Error fetching votes", e);
+        }
+    }
+
+    // Poll every 2 seconds
+    setInterval(fetchVotes, 2000);
+    fetchVotes(); // initial load
+
+    async function slideControl(action) {
+        // POST to /api/slide_control
+        let formData = new FormData();
+        formData.append("action", action);
+        await fetch('/api/slide_control', {
+            method: 'POST',
+            body: formData
+        });
+        // No need to do anything else; screen_view will poll for the changes
+    }
+    </script>
 </body>
 </html>
