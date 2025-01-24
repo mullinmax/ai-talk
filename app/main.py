@@ -24,16 +24,16 @@ topics = {
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
     """
-    Could be a welcome or redirect. Let's just redirect to the senior (audience) view.
+    Could be a welcome or redirect. Let's just redirect to the audience view.
     """
-    return RedirectResponse(url="/senior_view")
+    return RedirectResponse(url="/audience_view")
 
-@app.get("/senior_view", response_class=HTMLResponse)
-async def get_senior_view(request: Request):
+@app.get("/audience_view", response_class=HTMLResponse)
+async def get_audience_view(request: Request):
     """
-    View for seniors/audience to cast their votes via simple buttons.
+    View for audience to cast their votes via simple buttons.
     """
-    return templates.TemplateResponse("senior_view.html", {"request": request, "topics": topics})
+    return templates.TemplateResponse("audience_view.html", {"request": request, "topics": topics})
 
 @app.get("/presenter_view", response_class=HTMLResponse)
 async def get_presenter_view(request: Request):
@@ -60,7 +60,7 @@ async def post_vote(topic: str = Form(...)):
     """
     if topic in topics:
         topics[topic] += 1
-    return RedirectResponse(url="/senior_view", status_code=303)
+    return RedirectResponse(url="/audience_view", status_code=303)
 
 @app.post("/select_topic", response_class=HTMLResponse)
 async def select_topic(topic: str = Form(...)):
