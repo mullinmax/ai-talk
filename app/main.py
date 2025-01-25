@@ -122,6 +122,8 @@ def parse_sub_slides(topic_md: str):
 
 parse_presentation()
 
+print("Parsed topics:", presentation_data)
+
 # Sort topics by (category_order, points)
 presentation_data.sort(key=lambda x: (categories_order.index(x["category"]), x["points"]))
 
