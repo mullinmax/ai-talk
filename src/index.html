@@ -390,15 +390,18 @@
 						<p class="fragment" id="trendLineStep3" style="color: rgb(54, 162, 235)">\(y = 0.2x^2 + 0.3x + 0\)</p>
 						<!-- katex matix of the weights -->
 						<p class="fragment" style="color: rgb(54, 162, 235)">\(y = \begin{bmatrix} x^2 & x^1 & x^0 \end{bmatrix}\ \begin{bmatrix} 0.2 \\ 0.3 \\ 0 \end{bmatrix}\)</p>
+						
 					</div>
 					<canvas id="scatterChart"></canvas>
+					<img class="fragment" src="img/pink_house.png" style="position: absolute; top: 50px; left: 600px; width: 300px;">
+					<img class="fragment" src="img/simpsons_house.webp" style="position: absolute; bottom: 50px; right: 0px; width: 625px;">
 				</div>
 				<script defer>
 					document.addEventListener('DOMContentLoaded', () => {
 						const ctx = document.getElementById('scatterChart');
 						const data = [];
 						// add outlier
-						data.push({ x: 15.5, y: 5 });
+						data.push({ x: 12.5, y: 5 });
 						for (let x = 0; x <= 20; x+= Math.random() + 0.2) {
 							const noise = (Math.random() - 0.5) * 10;
 							const y = 0.2 * x * x + 0.3 * x + noise;
