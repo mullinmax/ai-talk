@@ -380,7 +380,7 @@
 
 
 
-			<section>
+			<section data-auto-animate>
 				<!-- Iterative trend line fragments -->
 				<div class="r-stack">
 					<div class="r-vstack" style="position: absolute; top: 20px; left: 20px;">
@@ -391,9 +391,8 @@
 						<p class="fragment" id="trendLineStep3" style="color: rgb(54, 162, 235)">\(y = 0.2x^2 + 0.3x +
 							0\)</p>
 						<!-- katex matix of the weights -->
-						<p class="fragment" style="color: rgb(54, 162, 235)">\(y = \begin{bmatrix} x^2 & x^1 & x^0
+						<p data-id="matrix-formula" class="fragment" style="color: rgb(54, 162, 235)">\(y = \begin{bmatrix} x^2 & x^1 & x^0
 							\end{bmatrix}\ \begin{bmatrix} 0.2 \\ 0.3 \\ 0 \end{bmatrix}\)</p>
-
 					</div>
 					<canvas id="scatterChart"></canvas>
 					<img class="fragment" src="img/pink_house.png"
@@ -405,13 +404,14 @@
 					document.addEventListener('DOMContentLoaded', () => {
 						const ctx = document.getElementById('scatterChart');
 						const data = [];
-						// add outlier
-						data.push({ x: 12.5, y: 5 });
 						for (let x = 0; x <= 20; x += Math.random() + 0.2) {
 							const noise = (Math.random() - 0.5) * 10;
 							const y = 0.2 * x * x + 0.3 * x + noise;
 							data.push({ x, y });
 						}
+
+						// add outlier
+						data.push({ x: 12.5, y: 5 });
 
 						const myChart = new Chart(ctx, {
 							type: 'scatter',
@@ -440,7 +440,10 @@
 						const lineData3 = [];
 
 						// for values in data
-						for (let x = 0; x <= data[data.length - 1].x; x++) {
+
+						min_x = Math.min(...data.map(d => d.x));
+						max_x = Math.max(...data.map(d => d.x));
+						for (let x = min_x; x <= max_x + 1; x++) {
 							lineData1.push({ x, y: 30 });
 							lineData2.push({ x, y: 3 * x });
 							lineData3.push({ x, y: 0.2 * x * x + 0.3 * x });
@@ -494,59 +497,68 @@
 					});
 				</script>
 			</section>
-			<section>
-				<div class="r-hstack">
-					<ol>
-						<li>Size</li>
-						<li>Location</li>
-						<li>Quality</li>
-					</ol>
-					<svg width="400" height="300">
-						<!-- Input layer nodes -->
-						<circle cx="50" cy="80" r="15" fill="white"></circle>
-						<circle cx="50" cy="150" r="15" fill="white"></circle>
-						<circle cx="50" cy="220" r="15" fill="white"></circle>
+			<section data-auto-animate>
+				<div class="r-vstack">
+					<p data-id="matrix-formula" style="color: rgb(54, 162, 235)">\(y = \begin{bmatrix} x^2 & x^1 & x^0
+						\end{bmatrix}\ \begin{bmatrix} 0.2 \\ 0.3 \\ 0 \end{bmatrix}\)</p>
+					<p class="fragment" style="color: rgb(54, 162, 235)">\(P = \begin{bmatrix} Size & Location & Quality
+						\end{bmatrix}\ \begin{bmatrix} 0.2 \\ 0.3 \\ 0 \end{bmatrix}\)</p>
+					<p class="fragment" style="color: rgb(54, 162, 235)">\(w_1 \cdot Size + w_2 \cdot Location + w_3 \cdot
+						Quality =
+						Price\)</p>
+					<br>
+					<div class="fragment r-hstack">
+						<div class="r-vstack">
+							<p>Size</p>
+							<p>Location</p>
+							<p>Quality</p>
+						</div>
+						<svg width="400" height="300">
+							<!-- Input layer nodes -->
+							<circle cx="50" cy="80" r="15" fill="white"></circle>
+							<circle cx="50" cy="150" r="15" fill="white"></circle>
+							<circle cx="50" cy="220" r="15" fill="white"></circle>
 
-						<line x1="65" y1="80" x2="185" y2="150" stroke="white" stroke-width="2" />
-						<line x1="65" y1="150" x2="185" y2="150" stroke="white" stroke-width="7" />
-						<line x1="65" y1="220" x2="185" y2="150" stroke="white" stroke-width="1" />
+							<line x1="65" y1="80" x2="185" y2="150" stroke="white" stroke-width="2" />
+							<line x1="65" y1="150" x2="185" y2="150" stroke="white" stroke-width="7" />
+							<line x1="65" y1="220" x2="185" y2="150" stroke="white" stroke-width="1" />
 
-						<circle cx="200" cy="150" r="15" fill="white"></circle>
-
-						<!-- Uncommented hidden and output layer elements -->
-						<g class="fragment fade-in" data-fragment-index="3">
-							<!-- Hidden layer nodes -->
-							<circle cx="200" cy="80" r="15" fill="white"></circle>
 							<circle cx="200" cy="150" r="15" fill="white"></circle>
-							<circle cx="200" cy="220" r="15" fill="white"></circle>
 
-							<!-- Output layer nodes -->
-							<circle cx="350" cy="150" r="15" fill="white"></circle>
+							<!-- Uncommented hidden and output layer elements -->
+							<g class="fragment fade-in">
+								<!-- Hidden layer nodes -->
+								<circle cx="200" cy="80" r="15" fill="white"></circle>
+								<circle cx="200" cy="150" r="15" fill="white"></circle>
+								<circle cx="200" cy="220" r="15" fill="white"></circle>
+
+								<!-- Output layer nodes -->
+								<circle cx="350" cy="150" r="15" fill="white"></circle>
 
 
-							<!-- Additional connection lines -->
-							<line x1="215" y1="80" x2="335" y2="150" stroke="white" stroke-width="6" />
-							<line x1="215" y1="150" x2="335" y2="150" stroke="white" stroke-width="5" />
-							<line x1="215" y1="220" x2="335" y2="150" stroke="white" stroke-width="1" />
+								<!-- Additional connection lines -->
+								<line x1="215" y1="80" x2="335" y2="150" stroke="white" stroke-width="6" />
+								<line x1="215" y1="150" x2="335" y2="150" stroke="white" stroke-width="5" />
+								<line x1="215" y1="220" x2="335" y2="150" stroke="white" stroke-width="1" />
 
-							<line x1="65" y1="80" x2="185" y2="80" stroke="white" stroke-width="7" />
-							<line x1="65" y1="80" x2="185" y2="220" stroke="white" stroke-width="6" />
-							<line x1="65" y1="150" x2="185" y2="80" stroke="white" stroke-width="5" />
-							<line x1="65" y1="150" x2="185" y2="220" stroke="white" stroke-width="7" />
-							<line x1="65" y1="220" x2="185" y2="80" stroke="white" stroke-width="4" />
-							<line x1="65" y1="220" x2="185" y2="220" stroke="white" stroke-width="4" />
-						</g>
-					</svg>
-					<p>Estimated Price</p>
+								<line x1="65" y1="80" x2="185" y2="80" stroke="white" stroke-width="7" />
+								<line x1="65" y1="80" x2="185" y2="220" stroke="white" stroke-width="6" />
+								<line x1="65" y1="150" x2="185" y2="80" stroke="white" stroke-width="5" />
+								<line x1="65" y1="150" x2="185" y2="220" stroke="white" stroke-width="7" />
+								<line x1="65" y1="220" x2="185" y2="80" stroke="white" stroke-width="4" />
+								<line x1="65" y1="220" x2="185" y2="220" stroke="white" stroke-width="4" />
+							</g>
+						</svg>
+						<p>Estimated Price</p>
+					</div>
+
+					<br>
+					
+					<p class="fragment">\(\begin{bmatrix} Size & Location & Quality
+						\end{bmatrix}\
+						\begin{bmatrix} w_{11} & w_{12} & w_{13} \\ w_{21} & w_{22} & w_{23} \\ w_{31} & w_{32} & w_{33}
+						\end{bmatrix}\ \begin{bmatrix} w_{41} \\ w_{42} \\ w_{43} \end{bmatrix} = Price\)</p>
 				</div>
-				<p class="fragment" data-fragment-index="1">\(w_1 \cdot x_1 + w_2 \cdot x_2 + w_3 \cdot x_3 = y\)</p>
-				<br>
-				<p class="fragment" data-fragment-index="2">\(w_1 \cdot Size + w_2 \cdot Location + w_3 \cdot Quality =
-					Price\)</p>
-				<br>
-				<p class="fragment" data-fragment-index="4">\(\begin{bmatrix} Size & Location & Quality \end{bmatrix}\
-					\begin{bmatrix} w_{11} & w_{12} & w_{13} \\ w_{21} & w_{22} & w_{23} \\ w_{31} & w_{32} & w_{33}
-					\end{bmatrix}\ \begin{bmatrix} w_{41} \\ w_{42} \\ w_{43} \end{bmatrix} = Price\)</p>
 			</section>
 		</div>
 
