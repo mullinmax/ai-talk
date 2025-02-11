@@ -487,9 +487,53 @@
 							});
 						}
 					});
-				</script>
+				</script>				
+			</section>
+			<section>
+				<div class="r-hstack">
+				<ol>
+					<li>Size</li>
+					<li>Location</li>
+					<li>Quality</li>
+				</ol>
+				<svg width="600" height="300">
+					<!-- Input layer nodes -->
+					<circle cx="50" cy="80" r="15" fill="white"></circle>
+					<circle cx="50" cy="150" r="15" fill="white"></circle>
+					<circle cx="50" cy="220" r="15" fill="white"></circle>
 
+					<line x1="65" y1="80" x2="185" y2="150" stroke="white"/>
+					<line x1="65" y1="150" x2="185" y2="150" stroke="white"/>
+					<line x1="65" y1="220" x2="185" y2="150" stroke="white"/>
+
+					<circle cx="200" cy="150" r="15" fill="white"></circle>
+					
+					<!-- Uncommented hidden and output layer elements -->
+					<g class="fragment fade-in">
+						<!-- Hidden layer nodes -->
+						<circle cx="200" cy="80" r="15" fill="white"></circle>
+						<circle cx="200" cy="150" r="15" fill="white"></circle>
+						<circle cx="200" cy="220" r="15" fill="white"></circle>
+
+						<!-- Output layer nodes -->
+						<circle cx="350" cy="150" r="15" fill="white"></circle>
 				
+
+						<!-- Additional connection lines -->
+						<line x1="215" y1="80" x2="335" y2="150" stroke="white"/>
+						<line x1="215" y1="150" x2="335" y2="150" stroke="white"/>
+						<line x1="215" y1="220" x2="335" y2="150" stroke="white"/>
+						
+						<line x1="65" y1="80" x2="185" y2="80" stroke="white"/>
+						<line x1="65" y1="80" x2="185" y2="220" stroke="white"/>
+						<line x1="65" y1="150" x2="185" y2="80" stroke="white"/>
+						<line x1="65" y1="150" x2="185" y2="220" stroke="white"/>
+						<line x1="65" y1="220" x2="185" y2="80" stroke="white"/>
+						<line x1="65" y1="220" x2="185" y2="220" stroke="white"/>
+					</g>
+				</svg>
+				<p>Estimated Price</p>
+			</div>
 			</section>
 
 	</div>
