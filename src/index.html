@@ -387,7 +387,9 @@
 					<div class="r-vstack" style="position: absolute; top: 20px; left: 20px;">
 						<p class="fragment" id="trendLineStep1" style="color: rgb(200, 200, 200)">\(y = 0x^2 + 0x + 30\)</p>
 						<p class="fragment" id="trendLineStep2" style="color: rgb(100, 200, 100)">\(y = 0x^2 + 3x + 0\)</p>
-						<p class="fragment" id="trendLineStep3" style="color: rgb(54, 162, 235)">\(y = 0.25x^2 + 0.25x + 0\)</p>
+						<p class="fragment" id="trendLineStep3" style="color: rgb(54, 162, 235)">\(y = 0.2x^2 + 0.3x + 0\)</p>
+						<!-- katex matix of the weights -->
+						<p class="fragment" style="color: rgb(54, 162, 235)">\(y = \begin{bmatrix} x^2 & x^1 & x^0 \end{bmatrix}\ \begin{bmatrix} 0.2 \\ 0.3 \\ 0 \end{bmatrix}\)</p>
 					</div>
 					<canvas id="scatterChart"></canvas>
 				</div>
@@ -395,12 +397,14 @@
 					document.addEventListener('DOMContentLoaded', () => {
 						const ctx = document.getElementById('scatterChart');
 						const data = [];
-						for (let x = 0; x <= 20; x++) {
+						// add outlier
+						data.push({ x: 15.5, y: 5 });
+						for (let x = 0; x <= 20; x+= Math.random() + 0.2) {
 							const noise = (Math.random() - 0.5) * 10;
-							const y = 0.25 * x * x + 0.25 * x + noise;
+							const y = 0.2 * x * x + 0.3 * x + noise;
 							data.push({ x, y });
 						}
-
+						
 						const myChart = new Chart(ctx, {
 							type: 'scatter',
 							data: {
@@ -428,10 +432,10 @@
 						const lineData3 = [];
 
 						// for values in data
-						for (let x = data[0].x; x <= data[data.length - 1].x; x++) {
+						for (let x = 0; x <= data[data.length - 1].x; x++) {
 							lineData1.push({ x, y: 30 });
 							lineData2.push({ x, y: 3 * x});
-							lineData3.push({ x, y: 0.25 * x * x + 0.25 * x});
+							lineData3.push({ x, y: 0.2 * x * x + 0.3 * x});
 						}
 
 						function addLine(label, lineData, color) {
