@@ -31,26 +31,23 @@
 
 		<!-- Any section element inside of this container is displayed as a slide -->
 		<div class="slides">
-
-			<!-- <section
-					data-markdown="markdown.md"
-					data-separator="^---\n"
-					data-separator-vertical="^\n\n"
-					data-separator-notes="^Note:"
-					data-charset="iso-8859-15"
-				>
-					### Demystifying Artificial Intelligence
-					*Maxwell Mullin 2024*
-				</section> -->
-
 			<section>
-				<section>
-					<h1>Demystifying Artificial Intelligence</h1>
-					<!-- <br>
-						<h2>Voices of the Village</h2> -->
-					<br>
-					<h3>Maxwell Mullin 2024</h3>
-
+				<section style="position: relative; overflow: hidden;">
+					<div class="r-stack" style="position: relative;">
+						<video class="r-stretch" style="filter: blur(5px) brightness(0.7);" width="1920" height="1080"
+							autoplay muted loop playsinline onplay="this.playbackRate=0.25;">
+							<source src="img/loop.mp4" type="video/mp4">
+						</video>
+						<div
+							style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.2); pointer-events: none;">
+						</div>
+						<div
+							style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1; text-align: center;">
+							<h1>Demystifying Artificial Intelligence</h1>
+							<br>
+							<h3>Maxwell Mullin 2024</h3>
+						</div>
+					</div>
 				</section>
 				<!-- we live in a world profoundly dependent on science and technology in which hardly anyone knows anything about science and technology. - Carl Sagan -->
 				<!-- thought/joke: This is actually a good thing, that's the point of specialization. Not everyone needs to or even can know everything -->
@@ -281,24 +278,24 @@
 						<div>
 							<h3>History</h3>
 							<p>Landmark developments</p>
-								<!-- <p>the first big break in training</p> -->
-								<!-- perceptron  & back propogation-->
-								<!-- <p>the bitter lesson</p> -->
-								<!-- The bitter lesson -->
-								<!-- <p>attention is all you need</p> -->
-								<!-- attention is all you need -->
+							<!-- <p>the first big break in training</p> -->
+							<!-- perceptron  & back propogation-->
+							<!-- <p>the bitter lesson</p> -->
+							<!-- The bitter lesson -->
+							<!-- <p>attention is all you need</p> -->
+							<!-- attention is all you need -->
 							<p>The rise of LLMs</p>
-								<!-- open AI founded -->
-								<!-- gpt 2's original interface -->
+							<!-- open AI founded -->
+							<!-- gpt 2's original interface -->
 							<p>not-so-openAI</p>
-								<!-- ollama & facebook -->
-								<!-- open AI becomes less open and less nonprofit -->
-								<!-- Elon musk's bid to buy just the non-profit part of openAI to make raising capital harder -->
+							<!-- ollama & facebook -->
+							<!-- open AI becomes less open and less nonprofit -->
+							<!-- Elon musk's bid to buy just the non-profit part of openAI to make raising capital harder -->
 							<p> Reasoning Models</p>
-								<!-- Deep seek R1 -->
-								<!-- trained for roughly the cost of Sam Altman's car -->
-								<!-- the speed of development (vacation developing)-->
-								
+							<!-- Deep seek R1 -->
+							<!-- trained for roughly the cost of Sam Altman's car -->
+							<!-- the speed of development (vacation developing)-->
+
 						</div>
 
 						<div>
@@ -309,7 +306,10 @@
 							<!-- trained on entiredty of internet and more -->
 							<!-- 3b1b intro to LLMs https://www.youtube.com/watch?v=LPZh9BOjkQs -->
 							<!-- 3b1b playlist of NN videos https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi -->
+
+
 							<p>Tokenization & Embeddings</p>
+							<!-- https://tiktokenizer.vercel.app/ -->
 							<!-- "r"s in strawberry -->
 							<!-- Solid Gold Magikarp -->
 							<p>Retrival Augmented Generation</p>
@@ -319,12 +319,6 @@
 						<div>
 							<h3>Impact</h3>
 							<p>Super Intelegince</p>
-							<!-- <p>The best case</p> -->
-							<!-- computers are the bicicle of the mind https://www.youtube.com/watch?v=NjIhmzU0Y8Y -->
-							<!-- could AGI be another layer of the brain? -->
-							<!-- <p>The worst case</p> -->
-							<!-- stamp collecting, condoms, birds of paradise -->
-							<!-- writing doom https://www.youtube.com/watch?v=xfMQ7hzyFW4 -->
 							<p>Environmental</p>
 							<!-- Electricity consumption, mobile generators -->
 							<p>Biomedical</p>
@@ -383,143 +377,210 @@
 			</section>
 
 
-<!--              -->
-<!-- HOW AI WORKS -->
-<!--              -->
+			<!--              -->
+			<!-- HOW AI WORKS -->
+			<!--              -->
 			<!-- Neural Networks -->
-			<section data-auto-animate>
-				<!-- Iterative trend line fragments -->
-				<div class="r-stack">
-					<div class="r-vstack" style="position: absolute; top: 20px; left: 20px;">
-						<p class="fragment" id="trendLineStep1" style="color: rgb(200, 200, 200)">\(y = 0x^2 + 0x + 30\)
-						</p>
-						<p class="fragment" id="trendLineStep2" style="color: rgb(100, 200, 100)">\(y = 0x^2 + 3x + 0\)
-						</p>
-						<p class="fragment" id="trendLineStep3" style="color: rgb(54, 162, 235)">\(y = 0.2x^2 + 0.3x +
-							0\)</p>
-						<!-- katex matix of the weights -->
-						<p data-id="matrix-formula" class="fragment" style="color: rgb(54, 162, 235)">\(y = \begin{bmatrix} x^2 & x^1 & x^0
-							\end{bmatrix}\ \begin{bmatrix} 0.2 \\ 0.3 \\ 0 \end{bmatrix}\)</p>
+			<section>
+				<section data-auto-animate>
+					<!-- Iterative trend line fragments -->
+					<div class="r-stack">
+						<div class="r-vstack" style="position: absolute; top: 20px; left: 20px;">
+							<p class="fragment" id="trendLineStep1" style="color: rgb(200, 200, 200)">\(y = 0x^2 + 0x +
+								30\)
+							</p>
+							<p class="fragment" id="trendLineStep2" style="color: rgb(100, 200, 100)">\(y = 0x^2 + 3x +
+								0\)
+							</p>
+							<p class="fragment" id="trendLineStep3" style="color: rgb(54, 162, 235)">\(y = 0.2x^2 + 0.3x
+								+
+								0\)</p>
+							<!-- katex matix of the weights -->
+							<p data-id="matrix-formula" class="fragment" style="color: rgb(54, 162, 235)">\(y =
+								\begin{bmatrix} x^2 & x^1 & x^0
+								\end{bmatrix}\ \begin{bmatrix} 0.2 \\ 0.3 \\ 0 \end{bmatrix}\)</p>
+						</div>
+						<canvas id="scatterChart"></canvas>
+						<img class="fragment" src="img/pink_house.png"
+							style="position: absolute; top: 50px; left: 600px; width: 300px;">
+						<img class="fragment" src="img/simpsons_house.webp"
+							style="position: absolute; bottom: 50px; right: 0px; width: 625px;">
 					</div>
-					<canvas id="scatterChart"></canvas>
-					<img class="fragment" src="img/pink_house.png"
-						style="position: absolute; top: 50px; left: 600px; width: 300px;">
-					<img class="fragment" src="img/simpsons_house.webp"
-						style="position: absolute; bottom: 50px; right: 0px; width: 625px;">
-				</div>
-				<script defer>
-					document.addEventListener('DOMContentLoaded', () => {
-						const ctx = document.getElementById('scatterChart');
-						const data = [];
-						for (let x = 0; x <= 20; x += Math.random() + 0.2) {
-							const noise = (Math.random() - 0.5) * 10;
-							const y = 0.2 * x * x + 0.3 * x + noise;
-							data.push({ x, y });
-						}
+					<script defer>
+						document.addEventListener('DOMContentLoaded', () => {
+							const ctx = document.getElementById('scatterChart');
+							const data = [];
+							for (let x = 0; x <= 20; x += Math.random() + 0.2) {
+								const noise = (Math.random() - 0.5) * 10;
+								const y = 0.2 * x * x + 0.3 * x + noise;
+								data.push({ x, y });
+							}
 
-						// add outlier
-						data.push({ x: 12.5, y: 5 });
+							// add outlier
+							data.push({ x: 12.5, y: 5 });
 
-						const myChart = new Chart(ctx, {
-							type: 'scatter',
-							data: {
-								datasets: [{
-									data,
-									backgroundColor: 'rgb(255, 99, 132)',
-									pointRadius: 10
-								}]
-							},
-							options: {
-								scales: {
-									x: { display: false },
-									y: { display: false }
+							const myChart = new Chart(ctx, {
+								type: 'scatter',
+								data: {
+									datasets: [{
+										data,
+										backgroundColor: 'rgb(255, 99, 132)',
+										pointRadius: 10
+									}]
 								},
-								plugins: {
-									legend: { display: false },
-									tooltip: { enabled: false }
+								options: {
+									scales: {
+										x: { display: false },
+										y: { display: false }
+									},
+									plugins: {
+										legend: { display: false },
+										tooltip: { enabled: false }
+									}
 								}
+							});
+
+							// Define incremental lines
+							const lineData1 = [];
+							const lineData2 = [];
+							const lineData3 = [];
+
+							// for values in data
+
+							min_x = Math.min(...data.map(d => d.x));
+							max_x = Math.max(...data.map(d => d.x));
+							for (let x = min_x; x <= max_x + 1; x++) {
+								lineData1.push({ x, y: 30 });
+								lineData2.push({ x, y: 3 * x });
+								lineData3.push({ x, y: 0.2 * x * x + 0.3 * x });
+							}
+
+							function addLine(label, lineData, color) {
+								myChart.data.datasets.push({
+									type: 'line',
+									label,
+									data: lineData,
+									borderColor: color,
+									borderWidth: 3,
+									pointRadius: 0
+								});
+								myChart.update();
+							}
+
+							function removeLine(label) {
+								myChart.data.datasets = myChart.data.datasets.filter(ds => ds.label !== label);
+								myChart.update();
+							}
+
+							if (typeof Reveal !== 'undefined') {
+								Reveal.addEventListener('fragmentshown', event => {
+									switch (event.fragment.id) {
+										case 'trendLineStep1':
+											addLine('step1', lineData1, 'rgb(200, 200, 200)');
+											break;
+										case 'trendLineStep2':
+											addLine('step2', lineData2, 'rgb(100, 200, 100)');
+											break;
+										case 'trendLineStep3':
+											addLine('step3', lineData3, 'rgb(54, 162, 235)');
+											break;
+									}
+								});
+								Reveal.addEventListener('fragmenthidden', event => {
+									switch (event.fragment.id) {
+										case 'trendLineStep1':
+											removeLine('step1');
+											break;
+										case 'trendLineStep2':
+											removeLine('step2');
+											break;
+										case 'trendLineStep3':
+											removeLine('step3');
+											break;
+									}
+								});
 							}
 						});
+					</script>
+				</section>
+				<section data-auto-animate>
+					<div class="r-vstack">
+						<p data-id="matrix-formula" style="color: rgb(54, 162, 235)">\(y = \begin{bmatrix} x^2 & x^1 &
+							x^0
+							\end{bmatrix}\ \begin{bmatrix} 0.2 \\ 0.3 \\ 0 \end{bmatrix}\)</p>
+						<p class="fragment" style="color: rgb(54, 162, 235)">\(P = \begin{bmatrix} Size & Location &
+							Quality
+							\end{bmatrix}\ \begin{bmatrix} 0.2 \\ 0.3 \\ 0 \end{bmatrix}\)</p>
+						<p class="fragment" style="color: rgb(54, 162, 235)">\(w_1 \cdot Size + w_2 \cdot Location + w_3
+							\cdot
+							Quality =
+							Price\)</p>
+						<br>
+						<div class="fragment r-hstack">
+							<div class="r-vstack">
+								<p>Size</p>
+								<p>Location</p>
+								<p>Quality</p>
+							</div>
+							<svg width="400" height="300">
+								<!-- Input layer nodes -->
+								<circle cx="50" cy="80" r="15" fill="white"></circle>
+								<circle cx="50" cy="150" r="15" fill="white"></circle>
+								<circle cx="50" cy="220" r="15" fill="white"></circle>
 
-						// Define incremental lines
-						const lineData1 = [];
-						const lineData2 = [];
-						const lineData3 = [];
+								<line x1="60" y1="80" x2="185" y2="150" stroke="white" stroke-width="4" />
+								<line x1="60" y1="150" x2="190" y2="150" stroke="white" stroke-width="10" />
+								<line x1="60" y1="220" x2="185" y2="150" stroke="white" stroke-width="1" />
 
-						// for values in data
+								<circle cx="200" cy="150" r="15" fill="white"></circle>
 
-						min_x = Math.min(...data.map(d => d.x));
-						max_x = Math.max(...data.map(d => d.x));
-						for (let x = min_x; x <= max_x + 1; x++) {
-							lineData1.push({ x, y: 30 });
-							lineData2.push({ x, y: 3 * x });
-							lineData3.push({ x, y: 0.2 * x * x + 0.3 * x });
-						}
+								<!-- Uncommented hidden and output layer elements -->
+								<g class="fragment fade-in">
+									<!-- Hidden layer nodes -->
+									<circle cx="200" cy="80" r="15" fill="white"></circle>
+									<circle cx="200" cy="150" r="15" fill="white"></circle>
+									<circle cx="200" cy="220" r="15" fill="white"></circle>
 
-						function addLine(label, lineData, color) {
-							myChart.data.datasets.push({
-								type: 'line',
-								label,
-								data: lineData,
-								borderColor: color,
-								borderWidth: 3,
-								pointRadius: 0
-							});
-							myChart.update();
-						}
+									<!-- Output layer nodes -->
+									<circle cx="350" cy="150" r="15" fill="white"></circle>
 
-						function removeLine(label) {
-							myChart.data.datasets = myChart.data.datasets.filter(ds => ds.label !== label);
-							myChart.update();
-						}
 
-						if (typeof Reveal !== 'undefined') {
-							Reveal.addEventListener('fragmentshown', event => {
-								switch (event.fragment.id) {
-									case 'trendLineStep1':
-										addLine('step1', lineData1, 'rgb(200, 200, 200)');
-										break;
-									case 'trendLineStep2':
-										addLine('step2', lineData2, 'rgb(100, 200, 100)');
-										break;
-									case 'trendLineStep3':
-										addLine('step3', lineData3, 'rgb(54, 162, 235)');
-										break;
-								}
-							});
-							Reveal.addEventListener('fragmenthidden', event => {
-								switch (event.fragment.id) {
-									case 'trendLineStep1':
-										removeLine('step1');
-										break;
-									case 'trendLineStep2':
-										removeLine('step2');
-										break;
-									case 'trendLineStep3':
-										removeLine('step3');
-										break;
-								}
-							});
-						}
-					});
-				</script>
-			</section>
-			<section data-auto-animate>
-				<div class="r-vstack">
-					<p data-id="matrix-formula" style="color: rgb(54, 162, 235)">\(y = \begin{bmatrix} x^2 & x^1 & x^0
-						\end{bmatrix}\ \begin{bmatrix} 0.2 \\ 0.3 \\ 0 \end{bmatrix}\)</p>
-					<p class="fragment" style="color: rgb(54, 162, 235)">\(P = \begin{bmatrix} Size & Location & Quality
-						\end{bmatrix}\ \begin{bmatrix} 0.2 \\ 0.3 \\ 0 \end{bmatrix}\)</p>
-					<p class="fragment" style="color: rgb(54, 162, 235)">\(w_1 \cdot Size + w_2 \cdot Location + w_3 \cdot
-						Quality =
-						Price\)</p>
-					<br>
-					<div class="fragment r-hstack">
-						<div class="r-vstack">
-							<p>Size</p>
-							<p>Location</p>
-							<p>Quality</p>
+									<!-- Additional connection lines -->
+									<line x1="215" y1="80" x2="335" y2="150" stroke="white" stroke-width="6" />
+									<line x1="215" y1="150" x2="335" y2="150" stroke="white" stroke-width="5" />
+									<line x1="215" y1="220" x2="335" y2="150" stroke="white" stroke-width="1" />
+
+									<line x1="65" y1="80" x2="185" y2="80" stroke="white" stroke-width="7" />
+									<line x1="65" y1="80" x2="185" y2="220" stroke="white" stroke-width="6" />
+									<line x1="65" y1="150" x2="185" y2="80" stroke="white" stroke-width="5" />
+									<line x1="65" y1="150" x2="185" y2="220" stroke="white" stroke-width="7" />
+									<line x1="65" y1="220" x2="185" y2="80" stroke="white" stroke-width="4" />
+									<line x1="65" y1="220" x2="185" y2="220" stroke="white" stroke-width="4" />
+								</g>
+							</svg>
+							<p>Estimated Price</p>
 						</div>
+
+						<br>
+
+						<p class="fragment">\(\begin{bmatrix} Size & Location & Quality
+							\end{bmatrix}\
+							\begin{bmatrix} w_{11} & w_{12} & w_{13} \\ w_{21} & w_{22} & w_{23} \\ w_{31} & w_{32} &
+							w_{33}
+							\end{bmatrix}\ \begin{bmatrix} w_{41} \\ w_{42} \\ w_{43} \end{bmatrix} = Price\)</p>
+					</div>
+					<!-- add an aside -->
+					<aside class="notes">
+						<p>replace x with...</p>
+						<p>single layer => ply wood sheets</p>
+					</aside>
+				</section>
+			</section>
+			<!-- overveiw of LLMs -->
+			<section>
+
+				<section data-auto-animate>
+					<div class="r-vstack">
 						<svg width="400" height="300">
 							<!-- Input layer nodes -->
 							<circle cx="50" cy="80" r="15" fill="white"></circle>
@@ -533,58 +594,69 @@
 							<circle cx="200" cy="150" r="15" fill="white"></circle>
 
 							<!-- Uncommented hidden and output layer elements -->
-							<g class="fragment fade-in">
-								<!-- Hidden layer nodes -->
-								<circle cx="200" cy="80" r="15" fill="white"></circle>
-								<circle cx="200" cy="150" r="15" fill="white"></circle>
-								<circle cx="200" cy="220" r="15" fill="white"></circle>
 
-								<!-- Output layer nodes -->
-								<circle cx="350" cy="150" r="15" fill="white"></circle>
+							<!-- Hidden layer nodes -->
+							<circle cx="200" cy="80" r="15" fill="white"></circle>
+							<circle cx="200" cy="150" r="15" fill="white"></circle>
+							<circle cx="200" cy="220" r="15" fill="white"></circle>
+
+							<!-- Output layer nodes -->
+							<circle cx="350" cy="150" r="15" fill="white"></circle>
 
 
-								<!-- Additional connection lines -->
-								<line x1="215" y1="80" x2="335" y2="150" stroke="white" stroke-width="6" />
-								<line x1="215" y1="150" x2="335" y2="150" stroke="white" stroke-width="5" />
-								<line x1="215" y1="220" x2="335" y2="150" stroke="white" stroke-width="1" />
+							<!-- Additional connection lines -->
+							<line x1="215" y1="80" x2="335" y2="150" stroke="white" stroke-width="6" />
+							<line x1="215" y1="150" x2="335" y2="150" stroke="white" stroke-width="5" />
+							<line x1="215" y1="220" x2="335" y2="150" stroke="white" stroke-width="1" />
 
-								<line x1="65" y1="80" x2="185" y2="80" stroke="white" stroke-width="7" />
-								<line x1="65" y1="80" x2="185" y2="220" stroke="white" stroke-width="6" />
-								<line x1="65" y1="150" x2="185" y2="80" stroke="white" stroke-width="5" />
-								<line x1="65" y1="150" x2="185" y2="220" stroke="white" stroke-width="7" />
-								<line x1="65" y1="220" x2="185" y2="80" stroke="white" stroke-width="4" />
-								<line x1="65" y1="220" x2="185" y2="220" stroke="white" stroke-width="4" />
-							</g>
+							<line x1="65" y1="80" x2="185" y2="80" stroke="white" stroke-width="7" />
+							<line x1="65" y1="80" x2="185" y2="220" stroke="white" stroke-width="6" />
+							<line x1="65" y1="150" x2="185" y2="80" stroke="white" stroke-width="5" />
+							<line x1="65" y1="150" x2="185" y2="220" stroke="white" stroke-width="7" />
+							<line x1="65" y1="220" x2="185" y2="80" stroke="white" stroke-width="4" />
+							<line x1="65" y1="220" x2="185" y2="220" stroke="white" stroke-width="4" />
 						</svg>
-						<p>Estimated Price</p>
-					</div>
 
-					<br>
-					
-					<p class="fragment">\(\begin{bmatrix} Size & Location & Quality
-						\end{bmatrix}\
-						\begin{bmatrix} w_{11} & w_{12} & w_{13} \\ w_{21} & w_{22} & w_{23} \\ w_{31} & w_{32} & w_{33}
-						\end{bmatrix}\ \begin{bmatrix} w_{41} \\ w_{42} \\ w_{43} \end{bmatrix} = Price\)</p>
-				</div>
-				<!-- add an aside -->
-				<aside class="notes">
-					<p>replace x with...</p>
-					<p>single layer => ply wood sheets</p>
-				</aside>
+						<p>\(\begin{bmatrix} Size & Location & Quality
+							\end{bmatrix}\
+							\begin{bmatrix} w_{11} & w_{12} & w_{13} \\ w_{21} & w_{22} & w_{23} \\ w_{31} & w_{32} &
+							w_{33}
+							\end{bmatrix}\ \begin{bmatrix} w_{41} \\ w_{42} \\ w_{43} \end{bmatrix} = Price\)
+						</p>
+						<p>\(\begin{bmatrix} Smile & You're & On
+							\end{bmatrix}\
+							\begin{bmatrix} w_{11} & w_{12} & w_{13} \\ w_{21} & w_{22} & w_{23} \\ w_{31} & w_{32} &
+							w_{33}
+							\end{bmatrix}\ \begin{bmatrix} w_{41} \\ w_{42} \\ w_{43} \end{bmatrix} = Camera\)
+						</p>
+					</div>
+					<aside class="notes">
+						<p>You can't multiply words</p>
+					</aside>
+				</section>
+				<section>
+					<iframe width="1920px" height="1080px" src="https://tiktokenizer.vercel.app/?model=ada" style="background-color: white"></iframe>
+				</section>
+				<section>
+					<iframe width="1920px" height="1080px" src="https://bbycroft.net/llm"></iframe>
+				</section>
 			</section>
 
-<!--              -->
-<!-- IMPACT       -->
-<!--              -->
+			<!--              -->
+			<!-- IMPACT       -->
+			<!--              -->
 			<!-- Super Intelligence -->
 			<section>
+				<!-- worst case -->
 				<section>
 					<h2>The Worst Case Scenario</h2>
 					<div class="r-hstack">
 						<img class="fragment" data-fragment-index="1" src="img/stamps.webp">
 						<div class="r-stack">
-							<p class="fragment fade-out" data-fragment-index="1">Any "Super Inteligence", that exceeds the thinking abilites of all humans combined cannot be controlled</p>
-							<q class="fragment" data-fragment-index="3">Add as many stamps as you can to my collection</q>
+							<p class="fragment fade-out" data-fragment-index="1">Any "Super Inteligence", that exceeds
+								the thinking abilites of all humans combined cannot be controlled</p>
+							<q class="fragment" data-fragment-index="3">Add as many stamps as you can to my
+								collection</q>
 						</div>
 						<img class="fragment" data-fragment-index="2" src="img/ASI.webp">
 					</div>
@@ -612,7 +684,7 @@
 						<p class="fragment">Could we reprogram it?</p>
 						<p class="fragment">Would it know this is not what we meant?</p>
 					</div>
-				</section>					
+				</section>
 				<section>
 					<h2>Examples of un-aligned goals</h2>
 					<!-- we subvert our genetic programming by using Birth control -->
@@ -637,7 +709,7 @@
 					<aside class="notes">
 						AI would not write suicide
 					</aside>
-					
+
 				</section>
 				<section>
 					<div class="r-hstack">
@@ -645,7 +717,9 @@
 							<q>real risk with AI isn't malice, but competence.</q>
 							<br>
 							<br>
-							<q>You're probably not an evil ant-hater...but if you're in charge of a hydroelectric green-energy project and there's an anthill in the region to be flooded, too bad for the ants.</q>
+							<q>You're probably not an evil ant-hater...but if you're in charge of a hydroelectric
+								green-energy project and there's an anthill in the region to be flooded, too bad for the
+								ants.</q>
 							<br>
 							<figcaption>— Stephen Hawking</figcaption>
 						</div>
@@ -653,27 +727,35 @@
 					</div>
 				</section>
 				<section>
-					<iframe width="1920" height="912" src="https://www.youtube-nocookie.com/embed/VIb52uTjyuk?si=YLeeFdyEHcI1CCKr&amp;controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-					<a href="https://www.youtube.com/watch?v=xfMQ7hzyFW4">https://www.youtube.com/watch?v=xfMQ7hzyFW4</a>
+					<iframe width="1920" height="912"
+						src="https://www.youtube-nocookie.com/embed/VIb52uTjyuk?si=YLeeFdyEHcI1CCKr&amp;controls=0"
+						title="YouTube video player" frameborder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+						referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+					<a
+						href="https://www.youtube.com/watch?v=xfMQ7hzyFW4">https://www.youtube.com/watch?v=xfMQ7hzyFW4</a>
 				</section>
 				<section>
 					<h2>Some Reasurances</h2>
-					<br>					
 					<br>
-					<ul>
-						<li>ASI may not be possible with our current resources</li>
-						<br>
-						<li>The best AI in the world is still clearly not AGI, and certainly not ASI</li>
-						<br>
-						<li>There are many people working on AI safety</li>
-					</ul>
+					<br>
+					<p>ASI may not be possible with our current resources</p>
+					<br>
+					<p>Our best AI today is still clearly not AGI, and certainly not ASI</p>
+					<br>
+					<p>AI safety is being actively researched</p>
+
 				</section>
-				
+				<!-- Best Case -->
 				<section>
 					<h2>The Best Case</h2>
 				</section>
 				<section>
-					<iframe width="1920" height="1080" src="https://www.youtube-nocookie.com/embed/NjIhmzU0Y8Y?si=prJNVOmpEKdGXxna&amp;controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+					<iframe width="1920" height="1080"
+						src="https://www.youtube-nocookie.com/embed/NjIhmzU0Y8Y?si=prJNVOmpEKdGXxna&amp;controls=0"
+						title="YouTube video player" frameborder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+						referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 				</section>
 				<section>
 					<h2>Maybe AI is a natural step of human evolution</h2>
@@ -717,13 +799,13 @@
 					</table>
 					<aside class="notes">
 						<p>Due for another layer 600K - 300K years ago with exponential fit</p>
+						<p>Idiocracy, fliped perspective, "not-sure" is the AI</p>
 					</aside>
 				</section>
 			</section>
 
 
 		</div>
-
 		<script src="dist/reveal.js"></script>
 		<script src="plugin/zoom/zoom.js"></script>
 		<script src="plugin/notes/notes.js"></script>
