@@ -814,13 +814,14 @@
 							<h4>My opinion</h4>
 							<p>Art is a dialogue; artists respond to the work of their peers</p>
 							<p class="fragment">We should not limit that because of their process</p>
-							<p class="fragment">Anyone can violate a copyright with photoshop, but to ban it's use would be a disservice to all parties</p>
+							<p class="fragment">Anyone can violate a copyright with photoshop, but to ban it's use would
+								be a disservice to all parties</p>
 						</div>
 					</div>
 					<aside class="notes">
 						<p>artist in a dialogues: Expressionism, Impressionism, Cubism, Surrealism</p>
 					</aside>
-				</section>	
+				</section>
 
 				<!-- copyright covers the expression of ideas, not the actual ideas -->
 
@@ -1131,6 +1132,77 @@
 				<!-- palantir battlefield AI intelegince -->
 				<!-- open AI partnership with Anduril https://www.anduril.com/article/anduril-partners-with-openai-to-advance-u-s-artificial-intelligence-leadership-and-protect-u-s/ -->
 				<!-- sora released 3 days beforehand https://openai.com/index/sora-is-here/ -->
+			</section>
+
+			<!--       -->
+			<!-- DEMOS -->
+			<!--       -->
+			<section>
+				<!-- Touring test -->
+				<section>
+					<h2>What is a Touring test?</h2>
+					<div class="r-stack">
+						<img height="1000px" src="img/Alan_Turing.jpg">
+						<img class="fragment" height="1000px" src="img/Turing_test_diagram.png">
+					</div>
+					<aside class="notes">
+						<p>Benedict Cumberbatch 2014</p>
+						<p>Imitation game two people (man and woman) would hide and slide types notes under the door. </p>
+					</aside>
+				</section>
+				<section>
+					<div class="r-vstack">
+						<iframe id="randomFace" width="1080px" height="1080px"
+							src="https://thispersondoesnotexist.com/"></iframe>
+						<a href="https://thispersondoesnotexist.com/">https://thispersondoesnotexist.com/</a>
+					</div>
+
+					<script>
+						document.addEventListener('DOMContentLoaded', () => {
+							let intervalId;
+							Reveal.addEventListener('slidechanged', event => {
+								if (event.currentSlide.contains(document.getElementById('randomFace'))) {
+									intervalId = setInterval(() => {
+										document.getElementById('randomFace').src = 'https://thispersondoesnotexist.com/?' + Date.now();
+									}, 10000);
+								} else {
+									clearInterval(intervalId);
+								}
+							});
+						});
+					</script>
+				</section>
+				<section>
+					<div class="r-vstack">
+						<a href="https://app.humanornot.ai" target="_blank">
+							<img src="img/human_or_not.png" alt="human or not link" />
+						</a>
+						<a href="https://app.humanornot.ai">https://app.humanornot.ai</a>
+					</div>
+				</section>
+
+				<!-- <p>Programming</p> -->
+				<!-- copilot chatGPT-->
+
+				<!-- <p>Music and Audio</p> -->
+				<!-- music generation suno.io/ai -->
+
+				<!-- <p>Conversational models</p> -->
+				<!-- chatGPT conversation -->
+
+				<!-- <p>Image & Video</p> -->
+				<!-- stable diffusion -->
+				<!-- sora -->
+
+				<!-- <p>How is AI used in retail</p> -->
+				<!-- price optimization -->
+				<!-- supply chain -->
+				<!-- marketing -->
+
+				<!-- <p>Autonomous vehicles</p> -->
+				<!-- tesla -->
+				<!-- waymo -->
+				<!-- comma ai -->
 			</section>
 
 
