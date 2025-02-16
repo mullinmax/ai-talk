@@ -38,4 +38,4 @@ jobs:
       # - name: Call webhook on success
       - name: Call webhook on success
         run: |
-          curl -X POST https://portainer.braed.co/api/stacks/webhooks/25b8c1f9-ccec-4e72-8faa-77d363a4a91a
+          curl -X POST https://portainer.braed.co/api/stacks/webhooks/8164facc-4d76-41d5-8e77-a087f075c057
