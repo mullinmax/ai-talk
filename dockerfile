@@ -3,7 +3,7 @@ FROM python:3.9-slim
 # Install Node.js
 RUN apt-get update && \
     apt-get install -y curl gnupg && \
-    curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
+    curl -sL https://deb.nodesource.com/setup_22.x | bash - && \
     apt-get install -y nodejs && \
     rm -rf /var/lib/apt/lists/*
 
