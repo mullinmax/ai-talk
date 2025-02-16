@@ -1,4 +1,4 @@
-name: Build and Publish Docker Image
+name: Build and Publish Docker Images
 
 on:
   push:
@@ -19,10 +19,25 @@ jobs:
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Build the Docker image
+      - name: Build backend image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}:latest .
+          docker build -t ghcr.io/${{ github.repository }}/backend:latest ./backend
 
-      - name: Push the Docker image
+      - name: Push backend image
         run: |
-          docker push ghcr.io/${{ github.repository }}:latest
+          docker push ghcr.io/${{ github.repository }}/backend:latest
+
+      - name: Build frontend image
+        run: |
+          docker build -t ghcr.io/${{ github.repository }}/frontend:latest ./front-end
+
+      - name: Push frontend image
+        run: |
+          docker push ghcr.io/${{ github.repository }}/frontend:latest
+
+      # - name: Call webhook on success
+      #   if: success()
+      #   run: |
+      #     curl -X POST https://webhook.example/placeholder \
+      #       -H "Content-Type: application/json" \
+      #       -d '{"status": "success"}'
