@@ -23,6 +23,22 @@
 
 	<!-- chart js -->
 	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+	<script>
+		// toggle audio with shift + m
+		document.addEventListener('keydown', function (e) {
+			console.log('key', e.key);
+			if (e.shiftKey && e.key === 'M') {
+				console.log('toggling audio');
+				const audio = document.querySelector('audio');
+				if (audio.paused) {
+					audio.play();
+				} else {
+					audio.pause();
+				}
+			}
+		});
+	</script>
 </head>
 
 <body>
@@ -51,9 +67,14 @@
 							<a href="https://aitalk.doze.dev">https://aitalk.doze.dev</a>
 						</div>
 					</div>
+					<audio>
+						<source src="img/Neon-Nightmares.mp3" type="audio/mp3">
+						Your browser does not support the audio element.
+					</audio>
 				</section>
 				<!-- we live in a world profoundly dependent on science and technology in which hardly anyone knows anything about science and technology. - Carl Sagan -->
 				<!-- thought/joke: This is actually a good thing, that's the point of specialization. Not everyone needs to or even can know everything -->
+				<!-- who am I -->
 				<section>
 					<h2>
 						<pre><code>$ whoami</code></pre>
@@ -79,6 +100,7 @@
 					</blockquote>
 				</section>
 
+				<!-- childhood -->
 				<section>
 					<div class="r-hstack">
 						<div class="r-stack">
@@ -98,6 +120,7 @@
 					</div>
 				</section>
 
+				<!-- war games -->
 				<section>
 					<div class="r-stack">
 						<img src="img/little-art-theatre.jpg" height="1080">
@@ -108,6 +131,7 @@
 					</div>
 				</section>
 
+				<!-- 84.51 -->
 				<section>
 					<div class="r-hstack">
 						<img src="img/max_8451.jpg" height="700">
@@ -115,6 +139,7 @@
 					</div>
 				</section>
 
+				<!-- server -->
 				<section>
 					<div class="r-hstack" width="100%"
 						style="display: grid; grid-template-columns: 1fr 2fr;justify-items: center;">
@@ -342,10 +367,7 @@
 						</div>
 						<div>
 							<h3>Demos</h3>
-
 							<p>Touring test</p>
-							<!-- app.humanornot.ai -->
-
 							<p>Programming</p>
 							<!-- copilot chatGPT-->
 
