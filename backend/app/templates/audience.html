@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Audience Vote (Dark Mode)</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #222; /* Dark background */
+      color: #f0f0f0;         /* Light text */
+      padding: 0 1rem;
+    }
+    h1 {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      margin-top: 1rem;
+    }
+    .topic-box {
+      background: #333; /* Slightly lighter panel */
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    .topic-box h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+      color: #fff;
+    }
+
+    .subtopic {
+      display: block;
+      width: 100%;
+      text-align: left;
+      margin: 0.25rem 0;
+      padding: 0.6rem 0.75rem;
+      border: none;
+      border-radius: 4px;
+      background: #444; /* Dark grey */
+      color: #eee;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 0.95rem;
+    }
+    .subtopic:hover {
+      background: #555;
+    }
+    .subtopic.selected {
+      background: #4caf50;
+      color: #fff;
+    }
+    .subtopic.disabled {
+      background: #666 !important;
+      color: #999;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <h1>Vote On Your Interests</h1>
+  <div id="topic-grid" class="grid">
+    <!-- We'll fill in the subtopics from the template -->
+    {% for topic, subtopics in topics.items() %}
+    <div class="topic-box">
+      <h2>{{ topic }}</h2>
+      {% for sub in subtopics %}
+      <button class="subtopic"
+              data-topic="{{ topic }}"
+              data-subtopic="{{ sub }}">
+        {{ sub }}
+      </button>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+
+  <script>
+    // 1. Ensure we have a user_id in localStorage
+    let userId = localStorage.getItem("user_id");
+    if (!userId) {
+      userId = crypto.randomUUID 
+                ? crypto.randomUUID() 
+                : 'xxxx-xxxx-xxxx'.replace(/[x]/g, () => (Math.random()*16|0).toString(16));
+      localStorage.setItem("user_id", userId);
+    }
+
+    // 2. Toggle vote with fetch
+    async function toggleVote(topic, subtopic, button) {
+      // If disabled, do nothing
+      if (button.classList.contains("disabled")) {
+        return; 
+      }
+      const formData = new FormData();
+      formData.append("user_id", userId);
+      formData.append("topic", topic);
+      formData.append("subtopic", subtopic);
+      const response = await fetch("/vote", {
+        method: "POST",
+        body: formData
+      });
+      const data = await response.json();
+      if (data.status === "ok") {
+        // Flip the "selected" class
+        button.classList.toggle("selected");
+      }
+      // If it's "disabled", the server says it's now disabled, 
+      // but let's rely on the periodic refresh to update the UI 
+      // so we keep consistent.
+    }
+
+    // 3. Periodic refresh: fetch which subtopics this user has selected 
+    //    and which are disabled, then update the UI accordingly.
+    async function refreshAudienceData() {
+      const response = await fetch(`/audience/data/${userId}`);
+      const json = await response.json();
+      const voted = json.voted;       // Array of [topic, subtopic]
+      const disabledSubs = json.disabled; // Array of [topic, subtopic]
+
+      // Convert arrays of pairs to sets of "topic|subtopic" strings for easy checking
+      const votedSet = new Set(voted.map(item => item.join("|")));
+      const disabledSet = new Set(disabledSubs.map(item => item.join("|")));
+
+      // Update all subtopic buttons
+      const buttons = document.querySelectorAll(".subtopic");
+      buttons.forEach(btn => {
+        const t = btn.getAttribute("data-topic");
+        const s = btn.getAttribute("data-subtopic");
+        const pairKey = t + "|" + s;
+        // selected if in votedSet
+        if (votedSet.has(pairKey)) {
+          btn.classList.add("selected");
+        } else {
+          btn.classList.remove("selected");
+        }
+        // disabled if in disabledSet
+        if (disabledSet.has(pairKey)) {
+          btn.classList.add("disabled");
+        } else {
+          btn.classList.remove("disabled");
+        }
+      });
+    }
+
+    // 4. Add event listener to all subtopic buttons for toggling
+    document.addEventListener("click", (e) => {
+      if (e.target.classList.contains("subtopic")) {
+        const topic = e.target.getAttribute("data-topic");
+        const subtopic = e.target.getAttribute("data-subtopic");
+        toggleVote(topic, subtopic, e.target);
+      }
+    });
+
+    // 5. Kick off periodic refresh
+    setInterval(refreshAudienceData, 3000);
+    // Also do an immediate refresh upon load
+    refreshAudienceData();
+  </script>
+</body>
+</html>
