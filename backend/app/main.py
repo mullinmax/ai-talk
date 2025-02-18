@@ -5,91 +5,79 @@ from typing import Dict, Set, Tuple
 import uuid
 
 app = FastAPI()
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="app/templates")  # or wherever you moved your templates
 
 # ------------------
 # DATA STRUCTURES
 # ------------------
 
-# We'll store:
-# - user_votes: which subtopics a specific user has chosen
-# - vote_counts: how many total votes each (topic, subtopic) has
-# - disabled: which (topic, subtopic) is disabled by the presenter
-user_votes: Dict[str, Set[Tuple[str, str]]] = {}
-vote_counts: Dict[Tuple[str, str], int] = {}
-disabled: Set[Tuple[str, str]] = set()
+user_votes: Dict[str, Set[Tuple[str, str]]] = {}  # user_id => set of (topic, subtopic_title)
+vote_counts: Dict[Tuple[str, str], int] = {}       # (topic, subtopic_title) => vote count
+disabled: Set[Tuple[str, str]] = set()             # set of (topic, subtopic_title) that are disabled
 
-# Topics and subtopics
+# Each subtopic is a dict with "title" and "link"
 topics = {
     "History": [
-        "1950's to 2019",
-        "The rise of LLMs",
-        "not-so-openAI",
-        "Reasoning Models",
+        {"title": "1950's to 2019", "link": "https://example.com/history-1950-2019"},
+        {"title": "The rise of LLMs", "link": "https://example.com/history-llms"},
+        {"title": "not-so-openAI", "link": "https://example.com/not-so-openai"},
+        {"title": "Reasoning Models", "link": "https://example.com/reasoning-models"},
     ],
     "How AI works": [
-        "Neural Networks",
-        "Overview of LLMs",
-        "Tokenization & Embeddings",
+        {"title": "Neural Networks", "link": "https://example.com/neural-networks"},
+        {"title": "Overview of LLMs", "link": "https://example.com/overview-llms"},
+        {"title": "Tokenization & Embeddings", "link": "https://example.com/token-embed"},
     ],
     "Impact": [
-        "Copyright law",
-        "Super Intelligence",
-        "Environmental",
-        "Biomedical",
-        "Misinformation",
+        {"title": "Copyright law", "link": "https://example.com/copyright"},
+        {"title": "Super Intelligence", "link": "https://example.com/super-intelligence"},
+        {"title": "Environmental", "link": "https://example.com/environmental"},
+        {"title": "Biomedical", "link": "https://example.com/biomedical"},
+        {"title": "Misinformation", "link": "https://example.com/misinformation"},
     ],
     "Demos": [
-        "Conversational models",
-        "Programming",
-        "Music and Audio",
-        "Image & Video",
-        "Autonomous vehicles",
+        {"title": "Conversational models", "link": "https://example.com/conversational"},
+        {"title": "Programming", "link": "https://example.com/programming"},
+        {"title": "Music and Audio", "link": "https://example.com/music-audio"},
+        {"title": "Image & Video", "link": "https://example.com/image-video"},
+        {"title": "Autonomous vehicles", "link": "https://example.com/autonomous"},
     ],
 }
 
-# Initialize vote_counts with zero
-for t in topics:
-    for sub in topics[t]:
-        vote_counts[(t, sub)] = 0
+# Initialize vote_counts
+for topic, sub_list in topics.items():
+    for sub in sub_list:
+        pair = (topic, sub["title"])
+        vote_counts[pair] = 0
 
 # ------------------
 # HELPER FUNCTIONS
 # ------------------
 
 def calculate_percentages() -> Dict[Tuple[str, str], float]:
-    """
-    Calculate the percentage for each (topic, subtopic) based on total votes.
-    """
-    total = sum(v for k, v in vote_counts.items() if v > 0)
+    total = sum(v for v in vote_counts.values() if v > 0)
     if total == 0:
-        # If no votes yet, each subtopic is 0%
         return {k: 0.0 for k in vote_counts}
     
-    percentages = {}
-    for k, v in vote_counts.items():
-        if v > 0:
-            percentages[k] = (v / total) * 100
+    result = {}
+    for pair, count in vote_counts.items():
+        if count > 0:
+            result[pair] = (count / total) * 100
         else:
-            percentages[k] = 0.0
-    return percentages
+            result[pair] = 0.0
+    return result
 
-def toggle_vote(user_id: str, topic: str, subtopic: str):
-    """
-    Toggle the user's vote for (topic, subtopic).
-    If user had voted, remove that vote. Otherwise, add it.
-    """
-    pair = (topic, subtopic)
-    # If not present, initialize
+def toggle_vote(user_id: str, topic: str, subtopic_title: str):
+    pair = (topic, subtopic_title)
     if user_id not in user_votes:
         user_votes[user_id] = set()
     
     if pair in user_votes[user_id]:
-        # User removes their vote
+        # user un-votes
         user_votes[user_id].remove(pair)
         vote_counts[pair] -= 1
     else:
-        # User adds a vote
+        # user votes
         user_votes[user_id].add(pair)
         vote_counts[pair] += 1
 
@@ -99,36 +87,25 @@ def toggle_vote(user_id: str, topic: str, subtopic: str):
 
 @app.get("/", response_class=HTMLResponse)
 async def audience_page(request: Request):
-    """
-    Serve the audience voting page (templates/audience.html).
-    """
-    return templates.TemplateResponse("audience.html", {"request": request, "topics": topics})
+    return templates.TemplateResponse("audience.html", {
+        "request": request,
+        "topics": topics
+    })
 
 @app.post("/vote", response_class=JSONResponse)
 async def vote(user_id: str = Form(...), topic: str = Form(...), subtopic: str = Form(...)):
-    """
-    Toggle the user's vote for a given (topic, subtopic).
-    Returns JSON with "ok" or "disabled".
-    """
     pair = (topic, subtopic)
-    # If a subtopic is disabled, do nothing
     if pair in disabled:
-        return {"status": "disabled", "message": "Subtopic is disabled."}
+        return {"status": "disabled"}
     
     toggle_vote(user_id, topic, subtopic)
     return {"status": "ok"}
 
 @app.get("/audience/data/{user_id}", response_class=JSONResponse)
 async def get_audience_data(user_id: str):
-    """
-    Return which subtopics the user has voted for and
-    which subtopics are disabled, so the UI can be updated.
-    """
-    voted_pairs = user_votes.get(user_id, set())
-    # Convert set of tuples to list
-    voted_list = list(voted_pairs)
+    voted = list(user_votes.get(user_id, set()))
     disabled_list = list(disabled)
-    return {"voted": voted_list, "disabled": disabled_list}
+    return {"voted": voted, "disabled": disabled_list}
 
 # ------------------
 # PRESENTER ROUTES
@@ -136,44 +113,42 @@ async def get_audience_data(user_id: str):
 
 @app.get("/presenter", response_class=HTMLResponse)
 async def presenter_page(request: Request):
-    """
-    Serve the presenter page (templates/presenter.html).
-    """
-    return templates.TemplateResponse("presenter.html", {"request": request, "topics": topics})
+    return templates.TemplateResponse("presenter.html", {
+        "request": request,
+        "topics": topics
+    })
 
 @app.get("/presenter/data", response_class=JSONResponse)
 async def presenter_data():
     """
-    Return JSON containing the current vote percentages
-    and which subtopics are disabled.
+    Return the current subtopic data to the presenter, including:
+      - The subtopic's display title
+      - The subtopic's vote percentage
+      - Whether it is disabled
+      - The link for the subtopic
     """
     percentages = calculate_percentages()
     data = []
-    for t in topics:
-        for sub in topics[t]:
-            pair = (t, sub)
+    for topic, sub_list in topics.items():
+        for sub in sub_list:
+            pair = (topic, sub["title"])
             data.append({
-                "topic": t,
-                "subtopic": sub,
+                "topic": topic,
+                "subtopic_title": sub["title"],
                 "percentage": round(percentages[pair], 2),
-                "disabled": (pair in disabled),
+                "disabled": pair in disabled,
+                "link": sub["link"]
             })
     return {"data": data}
 
 @app.post("/presenter/disable", response_class=JSONResponse)
 async def presenter_disable(topic: str = Form(...), subtopic: str = Form(...)):
-    """
-    Disable a subtopic so the audience can no longer vote on it.
-    """
     pair = (topic, subtopic)
     disabled.add(pair)
     return {"status": "ok"}
 
 @app.post("/reset", response_class=JSONResponse)
 async def reset_votes():
-    """
-    Reset all votes (clears the entire poll).
-    """
     user_votes.clear()
     disabled.clear()
     for k in vote_counts:

@@ -71,6 +71,8 @@
   </style>
 </head>
 <body>
+  <h1>Presenter View</h1>
+
   <div id="topic-grid" class="grid">
     <!-- Populated by JavaScript -->
   </div>
@@ -80,16 +82,15 @@
   </div>
 
   <script>
-    // 1. Poll the server for updated data
+    // 1. Fetch data for the presenter
     async function fetchPresenterData() {
       const response = await fetch("/presenter/data");
       const json = await response.json();
-      return json.data; // array of { topic, subtopic, percentage, disabled }
+      return json.data; // array of { topic, subtopic_title, percentage, disabled, link }
     }
 
     // 2. Render the subtopics in a grid, grouped by topic
     function renderGrid(data) {
-      // data is an array of objects: {topic, subtopic, percentage, disabled}
       // Group by topic
       const topicsMap = {};
       data.forEach(item => {
@@ -115,9 +116,10 @@
           const btn = document.createElement("button");
           btn.className = "subtopic";
           btn.dataset.topic = subObj.topic;
-          btn.dataset.subtopic = subObj.subtopic;
+          btn.dataset.subtopicTitle = subObj.subtopic_title;
+          btn.dataset.link = subObj.link;  // store the link for redirection
 
-          // If disabled, gray it out and disable pointer
+          // If disabled, gray it out and remove pointer action
           if (subObj.disabled) {
             btn.classList.add("disabled");
           } else {
@@ -126,14 +128,17 @@
               `linear-gradient(to right, #66bb6a 0%, #66bb6a ${subObj.percentage}%, #555 ${subObj.percentage}%, #555 100%)`;
           }
 
-          btn.textContent = `${subObj.subtopic} - ${subObj.percentage}%`;
-          
-          // On click, disable if not already disabled
-          btn.addEventListener("click", () => {
+          // Button text: subtopic title plus percentage
+          btn.textContent = `${subObj.subtopic_title} - ${subObj.percentage}%`;
+
+          // On click, if not disabled, disable & navigate to link
+          btn.addEventListener("click", async () => {
             if (!subObj.disabled) {
-              disableSubtopic(subObj.topic, subObj.subtopic);
+              await disableSubtopic(subObj.topic, subObj.subtopic_title);
+              window.location.href = subObj.link; // <--- redirect
             }
           });
+
           box.appendChild(btn);
         });
 
@@ -142,17 +147,18 @@
     }
 
     // 3. Disable a subtopic by calling the server
-    async function disableSubtopic(topic, subtopic) {
+    async function disableSubtopic(topic, subtopicTitle) {
       const formData = new FormData();
       formData.append("topic", topic);
-      formData.append("subtopic", subtopic);
+      formData.append("subtopic", subtopicTitle);
 
       await fetch("/presenter/disable", {
         method: "POST",
         body: formData
       });
-      // Immediately refresh
-      refreshGrid();
+      // We do NOT wait for the next poll to refresh the UI 
+      // because we are about to redirect. 
+      // But if you *didn't* redirect, you'd do a manual refresh or wait for setInterval.
     }
 
     // 4. Periodically refresh the grid
@@ -169,7 +175,7 @@
       const response = await fetch("/reset", { method: "POST" });
       const data = await response.json();
       if (data.status === "ok") {
-        // Immediately refresh
+        // Immediately refresh the grid
         refreshGrid();
       }
     });
