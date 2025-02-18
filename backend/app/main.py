@@ -18,29 +18,29 @@ disabled: Set[Tuple[str, str]] = set()             # set of (topic, subtopic_tit
 # Each subtopic is a dict with "title" and "link"
 topics = {
     "History": [
-        {"title": "1950's to 2019", "link": "https://example.com/history-1950-2019"},
-        {"title": "The rise of LLMs", "link": "https://example.com/history-llms"},
-        {"title": "not-so-openAI", "link": "https://example.com/not-so-openai"},
-        {"title": "Reasoning Models", "link": "https://example.com/reasoning-models"},
+        {"title": "1950's to 2019", "link": "https://aitalk.doze.dev/#/3"},
+        {"title": "The rise of LLMs", "link": ""},
+        {"title": "not-so-openAI", "link": ""},
+        {"title": "Reasoning Models", "link": ""},
     ],
     "How AI works": [
-        {"title": "Neural Networks", "link": "https://example.com/neural-networks"},
-        {"title": "Overview of LLMs", "link": "https://example.com/overview-llms"},
-        {"title": "Tokenization & Embeddings", "link": "https://example.com/token-embed"},
+        {"title": "Neural Networks", "link": "https://aitalk.doze.dev/#/6"},
+        {"title": "Overview of LLMs", "link": "https://aitalk.doze.dev/#/7"},
+        {"title": "Tokenization & Embeddings", "link": ""},
     ],
     "Impact": [
-        {"title": "Copyright law", "link": "https://example.com/copyright"},
-        {"title": "Super Intelligence", "link": "https://example.com/super-intelligence"},
-        {"title": "Environmental", "link": "https://example.com/environmental"},
-        {"title": "Biomedical", "link": "https://example.com/biomedical"},
-        {"title": "Misinformation", "link": "https://example.com/misinformation"},
+        {"title": "Copyright law", "link": "https://aitalk.doze.dev/#/8"},
+        {"title": "Super Intelligence", "link": "https://aitalk.doze.dev/#/9"},
+        {"title": "Environmental", "link": "https://aitalk.doze.dev/#/10"},
+        {"title": "Biomedical", "link": "https://aitalk.doze.dev/#/11"},
+        {"title": "Misinformation", "link": "https://aitalk.doze.dev/#/12"},
     ],
     "Demos": [
-        {"title": "Conversational models", "link": "https://example.com/conversational"},
-        {"title": "Programming", "link": "https://example.com/programming"},
-        {"title": "Music and Audio", "link": "https://example.com/music-audio"},
-        {"title": "Image & Video", "link": "https://example.com/image-video"},
-        {"title": "Autonomous vehicles", "link": "https://example.com/autonomous"},
+        {"title": "Conversational models", "link": "https://aitalk.doze.dev/#/13"},
+        {"title": "Programming", "link": "https://aitalk.doze.dev/#/14"},
+        {"title": "Music and Audio", "link": "https://aitalk.doze.dev/#/15"},
+        {"title": "Image & Video", "link": "https://aitalk.doze.dev/#/16"},
+        {"title": "Autonomous vehicles", "link": "https://aitalk.doze.dev/#/17"},
     ],
 }
 
