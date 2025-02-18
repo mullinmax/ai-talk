@@ -16,7 +16,6 @@
       text-align: center;
       margin-top: 1rem;
     }
-
     .grid {
       display: grid;
       grid-gap: 1rem;
@@ -24,7 +23,7 @@
       margin-top: 1rem;
     }
     .topic-box {
-      background: #333; /* Slightly lighter panel */
+      background: #333;
       border-radius: 8px;
       padding: 1rem;
       box-shadow: 0 2px 4px rgba(0,0,0,0.5);
@@ -34,7 +33,6 @@
       font-size: 1.2rem;
       color: #fff;
     }
-
     .subtopic {
       display: block;
       width: 100%;
@@ -43,7 +41,7 @@
       padding: 0.6rem 0.75rem;
       border: none;
       border-radius: 4px;
-      background: #444; /* Dark grey */
+      background: #444;
       color: #eee;
       cursor: pointer;
       transition: background 0.2s;
@@ -66,15 +64,14 @@
 <body>
   <h1>Vote For Topics That Interest You</h1>
   <div id="topic-grid" class="grid">
-    <!-- We'll fill in the subtopics from the template -->
     {% for topic, subtopics in topics.items() %}
     <div class="topic-box">
       <h2>{{ topic }}</h2>
       {% for sub in subtopics %}
       <button class="subtopic"
               data-topic="{{ topic }}"
-              data-subtopic="{{ sub }}">
-        {{ sub }}
+              data-subtopic="{{ sub['title'] }}">
+        {{ sub["title"] }}
       </button>
       {% endfor %}
     </div>
@@ -85,8 +82,8 @@
     // 1. Ensure we have a user_id in localStorage
     let userId = localStorage.getItem("user_id");
     if (!userId) {
-      userId = crypto.randomUUID 
-                ? crypto.randomUUID() 
+      userId = crypto.randomUUID
+                ? crypto.randomUUID()
                 : 'xxxx-xxxx-xxxx'.replace(/[x]/g, () => (Math.random()*16|0).toString(16));
       localStorage.setItem("user_id", userId);
     }
@@ -95,7 +92,7 @@
     async function toggleVote(topic, subtopic, button) {
       // If disabled, do nothing
       if (button.classList.contains("disabled")) {
-        return; 
+        return;
       }
       const formData = new FormData();
       formData.append("user_id", userId);
@@ -107,23 +104,18 @@
       });
       const data = await response.json();
       if (data.status === "ok") {
-        // Flip the "selected" class
         button.classList.toggle("selected");
       }
-      // If it's "disabled", the server says it's now disabled, 
-      // but let's rely on the periodic refresh to update the UI 
-      // so we keep consistent.
+      // If data.status === "disabled", rely on periodic refresh to correct UI
     }
 
-    // 3. Periodic refresh: fetch which subtopics this user has selected 
-    //    and which are disabled, then update the UI accordingly.
+    // 3. Periodic refresh
     async function refreshAudienceData() {
       const response = await fetch(`/audience/data/${userId}`);
       const json = await response.json();
-      const voted = json.voted;       // Array of [topic, subtopic]
-      const disabledSubs = json.disabled; // Array of [topic, subtopic]
+      const voted = json.voted;         // Array of [topic, subtopic_title]
+      const disabledSubs = json.disabled; // Array of [topic, subtopic_title]
 
-      // Convert arrays of pairs to sets of "topic|subtopic" strings for easy checking
       const votedSet = new Set(voted.map(item => item.join("|")));
       const disabledSet = new Set(disabledSubs.map(item => item.join("|")));
 
@@ -148,7 +140,7 @@
       });
     }
 
-    // 4. Add event listener to all subtopic buttons for toggling
+    // 4. Click to toggle
     document.addEventListener("click", (e) => {
       if (e.target.classList.contains("subtopic")) {
         const topic = e.target.getAttribute("data-topic");
@@ -159,7 +151,6 @@
 
     // 5. Kick off periodic refresh
     setInterval(refreshAudienceData, 3000);
-    // Also do an immediate refresh upon load
     refreshAudienceData();
   </script>
 </body>
