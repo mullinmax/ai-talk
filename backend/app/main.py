@@ -2,10 +2,9 @@ from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from typing import Dict, Set, Tuple
-import uuid
 
 app = FastAPI()
-templates = Jinja2Templates(directory="app/templates")  # or wherever you moved your templates
+templates = Jinja2Templates(directory="app/templates")
 
 # ------------------
 # DATA STRUCTURES
@@ -15,7 +14,7 @@ user_votes: Dict[str, Set[Tuple[str, str]]] = {}  # user_id => set of (topic, su
 vote_counts: Dict[Tuple[str, str], int] = {}       # (topic, subtopic_title) => vote count
 disabled: Set[Tuple[str, str]] = set()             # set of (topic, subtopic_title) that are disabled
 
-# Each subtopic is a dict with "title" and "link"
+# Each subtopic is a dict with "title" and "link" (unused for now, but kept for future).
 topics = {
     "History": [
         {"title": "1950's to 2019", "link": "https://aitalk.doze.dev/#/3"},
@@ -58,7 +57,6 @@ def calculate_percentages() -> Dict[Tuple[str, str], float]:
     total = sum(v for v in vote_counts.values() if v > 0)
     if total == 0:
         return {k: 0.0 for k in vote_counts}
-    
     result = {}
     for pair, count in vote_counts.items():
         if count > 0:
@@ -71,7 +69,6 @@ def toggle_vote(user_id: str, topic: str, subtopic_title: str):
     pair = (topic, subtopic_title)
     if user_id not in user_votes:
         user_votes[user_id] = set()
-    
     if pair in user_votes[user_id]:
         # user un-votes
         user_votes[user_id].remove(pair)
@@ -97,7 +94,6 @@ async def vote(user_id: str = Form(...), topic: str = Form(...), subtopic: str =
     pair = (topic, subtopic)
     if pair in disabled:
         return {"status": "disabled"}
-    
     toggle_vote(user_id, topic, subtopic)
     return {"status": "ok"}
 
@@ -125,7 +121,7 @@ async def presenter_data():
       - The subtopic's display title
       - The subtopic's vote percentage
       - Whether it is disabled
-      - The link for the subtopic
+      - The link for the subtopic (not used for redirection, but kept for reference)
     """
     percentages = calculate_percentages()
     data = []
@@ -137,7 +133,7 @@ async def presenter_data():
                 "subtopic_title": sub["title"],
                 "percentage": round(percentages[pair], 2),
                 "disabled": pair in disabled,
-                "link": sub["link"]
+                "link": sub["link"]  # not used currently
             })
     return {"data": data}
 
@@ -147,8 +143,15 @@ async def presenter_disable(topic: str = Form(...), subtopic: str = Form(...)):
     disabled.add(pair)
     return {"status": "ok"}
 
-@app.post("/reset", response_class=JSONResponse)
+# ------------------
+# RESET VOTES (GET)
+# ------------------
+
+@app.get("/reset", response_class=JSONResponse)
 async def reset_votes():
+    """
+    GET /reset to clear all votes and disable states.
+    """
     user_votes.clear()
     disabled.clear()
     for k in vote_counts:

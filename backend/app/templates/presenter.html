@@ -52,36 +52,18 @@
       background: #666 !important;
       cursor: not-allowed;
     }
-    .controls {
-      margin-top: 1rem;
-      text-align: center;
-    }
-    .controls button {
-      padding: 0.5rem 1rem;
-      margin: 0.25rem;
-      font-size: 1rem;
-      cursor: pointer;
-      background: #444;
-      color: #eee;
-      border: 1px solid #666;
-      border-radius: 4px;
-    }
-    .controls button:hover {
-      background: #555;
-    }
   </style>
 </head>
 <body>
+
   <div id="topic-grid" class="grid">
     <!-- Populated by JavaScript -->
   </div>
 
-  <div class="controls">
-    <button id="resetBtn">Reset All Votes</button>
-  </div>
+  <!-- We removed the reset button in favor of GET /reset -->
 
   <script>
-    // 1. Fetch data for the presenter
+    // 1. Poll the server for updated data
     async function fetchPresenterData() {
       const response = await fetch("/presenter/data");
       const json = await response.json();
@@ -116,9 +98,9 @@
           btn.className = "subtopic";
           btn.dataset.topic = subObj.topic;
           btn.dataset.subtopicTitle = subObj.subtopic_title;
-          btn.dataset.link = subObj.link;  // store the link for redirection
+          // btn.dataset.link = subObj.link;  // we won't use link now
 
-          // If disabled, gray it out and remove pointer action
+          // If disabled, gray it out
           if (subObj.disabled) {
             btn.classList.add("disabled");
           } else {
@@ -130,22 +112,21 @@
           // Button text: subtopic title plus percentage
           btn.textContent = `${subObj.subtopic_title} - ${subObj.percentage}%`;
 
-          // On click, if not disabled, disable & navigate to link
+          // On click, if not disabled, disable the subtopic
           btn.addEventListener("click", async () => {
             if (!subObj.disabled) {
               await disableSubtopic(subObj.topic, subObj.subtopic_title);
-              window.location.href = subObj.link; // <--- redirect
+              // If you wanted to redirect:
+              // window.location.href = subObj.link;
             }
           });
-
           box.appendChild(btn);
         });
-
         grid.appendChild(box);
       }
     }
 
-    // 3. Disable a subtopic by calling the server
+    // 3. Disable a subtopic
     async function disableSubtopic(topic, subtopicTitle) {
       const formData = new FormData();
       formData.append("topic", topic);
@@ -155,9 +136,7 @@
         method: "POST",
         body: formData
       });
-      // We do NOT wait for the next poll to refresh the UI 
-      // because we are about to redirect. 
-      // But if you *didn't* redirect, you'd do a manual refresh or wait for setInterval.
+      // Next poll will refresh the UI
     }
 
     // 4. Periodically refresh the grid
@@ -167,17 +146,6 @@
     }
     setInterval(refreshGrid, 3000); // poll every 3 seconds
     refreshGrid(); // initial load
-
-    // 5. Reset button
-    const resetBtn = document.getElementById("resetBtn");
-    resetBtn.addEventListener("click", async () => {
-      const response = await fetch("/reset", { method: "POST" });
-      const data = await response.json();
-      if (data.status === "ok") {
-        // Immediately refresh the grid
-        refreshGrid();
-      }
-    });
   </script>
 </body>
 </html>
