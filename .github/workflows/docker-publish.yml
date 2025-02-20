@@ -19,14 +19,6 @@ jobs:
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Build backend image
-        run: |
-          docker build -t ghcr.io/${{ github.repository }}/backend:latest ./backend
-
-      - name: Push backend image
-        run: |
-          docker push ghcr.io/${{ github.repository }}/backend:latest
-
       - name: Build frontend image
         run: |
           docker build -t ghcr.io/${{ github.repository }}/frontend:latest ./front-end
