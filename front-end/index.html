@@ -338,25 +338,7 @@
 				</script>
 				<!-- Slide: Full Flowchart -->
 				<section>
-					<style>
-						.edgeLabels span {
-							color: #FFF !important;
-							background-color: #111111 !important;
-							font-size: 3rem;
-						}
-					</style>
-					<div class="mermaid r-stretch">
-						flowchart TD
-						classDef default fill:#fff, stroke:#000, stroke-width:2px, font-size:3.5rem, font-weight:bold
-
-						B[Test Dataset]
-						A[Random Formula Mutator]
-						C[Formula Evaluation]
-
-						A ---> C
-						B ---> C
-						C -- keep best --> A
-					</div>
+					<img src="img/flowchart.png">
 					<aside class="notes">
 						<p>one generic formula, just adjust it's output based on loss</p>
 					</aside>
@@ -567,14 +549,14 @@
 				<section>
 					<p>This picture of a monkey?</p>
 					<p class="fragment fade-in" style="color: rgb(33, 226, 33); font-size: 3em;">
-						&#10004; Yes
+						&#10004; Copyrightable
 					</p>
 					<img class="r-stretch" src="img/adorable_monkey.jpg">
 				</section>
 				<section>
 					<p>This picture of a monkey?</p>
 					<p class="fragment fade-in" style="color: rgb(227, 33, 11); font-size: 3em;">
-						&#10008; No
+						&#10008; Not Copyrightable
 					</p>
 					<img class="r-stretch" src="img/pd_monkey.jpg">
 					<aside class="notes">
@@ -604,20 +586,20 @@
 					</aside>
 				</section>
 				<section>
-					<p>This photo of a baord game?</p>
+					<p>This baord game?</p>
 					<p class="fragment fade-in" style="color: rgb(33, 226, 33); font-size: 3em;">
-						&#10004; Yes*
+						&#10004; Copyrightable*
 					</p>
 					<img class="r-stretch" src="img/ysopoly.webp">
 					<aside class="notes">
-						<p>Mechanics/rule are protected by now expired patent</p>
 						<p>phrasing of the those are protected by copyright</p>
+						<p>Mechanics/rule are protected by now expired patent</p>
 					</aside>
 				</section>
 				<section>
 					<p>This photo of a baord game?</p>
 					<p class="fragment fade-in" style="color: rgb(33, 226, 33); font-size: 3em;">
-						&#10004; Yes
+						&#10004; Copyrightable
 					</p>
 					<img class="r-stretch" src="img/board_game.jpg">
 				</section>
@@ -626,7 +608,7 @@
 						<div>
 							<p>This picture of a wine rack?</p>
 							<p class="fragment fade-in" style="color: rgb(33, 226, 33); font-size: 3em;">
-								&#10004; Yes
+								&#10004; Copyrightable
 							</p>
 						</div>
 						<div>
@@ -645,7 +627,7 @@
 				<section>
 					<p>This bottle rack?</p>
 					<p class="fragment fade-in" style="color: rgb(33, 226, 33); font-size: 3em;">
-						&#10004; Yes
+						&#10004; Copyrightable
 					</p>
 					<div class="r-hstack" style="gap: 40px">
 						<img height="500px" src="img/bottle_rack_og.jpg">
@@ -698,9 +680,7 @@
 						<div class="fragment">
 							<h4>My opinion</h4>
 							<p>Art is a dialogue; artists respond to the work of their peers</p>
-							<p class="fragment">We should not limit that because of their process</p>
-							<p class="fragment">Anyone can violate a copyright with photoshop, but to ban it's use would
-								be a disservice to all parties</p>
+							<p class="fragment">We should not limit that based on process. <br>Anyone can violate a copyright with photoshop, that doesn't mean we should ban it's use</p>
 						</div>
 					</div>
 					<aside class="notes">
@@ -837,28 +817,6 @@
 				</section>
 				<section>
 					<div class="r-vstack">
-						<iframe id="randomFace" width="1080px" height="1080px"
-							src="https://thispersondoesnotexist.com/"></iframe>
-						<a href="https://thispersondoesnotexist.com/">https://thispersondoesnotexist.com/</a>
-					</div>
-
-					<script>
-						document.addEventListener('DOMContentLoaded', () => {
-							let intervalId;
-							Reveal.addEventListener('slidechanged', event => {
-								if (event.currentSlide.contains(document.getElementById('randomFace'))) {
-									intervalId = setInterval(() => {
-										document.getElementById('randomFace').src = 'https://thispersondoesnotexist.com/?' + Date.now();
-									}, 10000);
-								} else {
-									clearInterval(intervalId);
-								}
-							});
-						});
-					</script>
-				</section>
-				<section>
-					<div class="r-vstack">
 						<a href="https://app.humanornot.ai" target="_blank">
 							<img src="img/human_or_not.png" alt="human or not link" />
 						</a>
@@ -938,6 +896,28 @@
 					<h2>Image & Video</h2>
 				</section>
 				<!-- Image & Video -->
+				<section>
+					<div class="r-vstack">
+						<iframe id="randomFace" width="1080px" height="1080px"
+							src="https://thispersondoesnotexist.com/"></iframe>
+						<a href="https://thispersondoesnotexist.com/">https://thispersondoesnotexist.com/</a>
+					</div>
+
+					<script>
+						document.addEventListener('DOMContentLoaded', () => {
+							let intervalId;
+							Reveal.addEventListener('slidechanged', event => {
+								if (event.currentSlide.contains(document.getElementById('randomFace'))) {
+									intervalId = setInterval(() => {
+										document.getElementById('randomFace').src = 'https://thispersondoesnotexist.com/?' + Date.now();
+									}, 10000);
+								} else {
+									clearInterval(intervalId);
+								}
+							});
+						});
+					</script>
+				</section>
 				<section>
 					<div class="r-stack">
 						<iframe width="1920px" height="950px"
@@ -1441,6 +1421,47 @@
 					<p>rhyming and meter</p>
 				</aside>
 			</section>
+				<!-- Mermaid.js Library -->
+				<script type="module">
+					import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+					mermaid.initialize({
+						startOnLoad: true,
+						flowchart: {
+							curve: 'linear',
+							htmlLabels: true
+						},
+						themeVariables: {
+							'lineColor': '#FFF',
+							'edgeLabelBackground': 'transparent',
+							'labelTextColor': '#FFF'
+						}
+					});
+				</script>
+				<!-- Slide: Full Flowchart -->
+				<section>
+					<style>
+						.edgeLabels span {
+							color: #FFF !important;
+							background-color: #111111 !important;
+							font-size: 3rem;
+						}
+					</style>
+					<div class="mermaid r-stretch">
+						flowchart TD
+						classDef default fill:#fff, stroke:#000, stroke-width:2px, font-size:3.5rem, font-weight:bold
+
+						B[Test Dataset]
+						A[Random Formula Mutator]
+						C[Formula Evaluation]
+
+						A ---> C
+						B ---> C
+						C -- keep best --> A
+					</div>
+					<aside class="notes">
+						<p>one generic formula, just adjust it's output based on loss</p>
+					</aside>
+				</section>
 
 
 		</div>
