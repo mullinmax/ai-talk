@@ -166,11 +166,11 @@
 					<img class="fragment" src="img/graffiti.jpg" height="500" />
 					<aside class="notes">
 						<ul>
-						<li>HW reccognition attempted using advanced programming since 1960's</li>
-						<li>Graffiti Initially released 1994 <u>compromise to work around the problem</u></li>
-						<li>We don't use graffiti because AI repalced it</li>
-						<li>Extra in college class in 2016</li>
-					</ul>
+							<li>HW reccognition attempted using advanced programming since 1960's</li>
+							<li>Graffiti Initially released 1994 <u>compromise to work around the problem</u></li>
+							<li>We don't use graffiti because AI repalced it</li>
+							<li>Extra in college class in 2016</li>
+						</ul>
 					</aside>
 				</section>
 				<section>
@@ -303,256 +303,110 @@
 			<!--              -->
 			<!-- HOW AI WORKS -->
 			<!--              -->
-			<!-- Neural Networks -->
+
+
+
+
+
+
+
+
+
+
+
+
+			<!-- Slide 1: Title -->
 			<section>
 				<section>
-					<h1>How AI Works</h1>
+					<h1>How AI Learns</h1>
 				</section>
-				<section data-auto-animate>
-					<!-- Iterative trend line fragments -->
-					<div class="r-stack">
-						<div class="r-vstack" style="position: absolute; top: 20px; left: 20px;">
-							<p class="fragment" id="trendLineStep1" style="color: rgb(200, 200, 200)">\(y = 0x^2 + 0x +
-								30\)
-							</p>
-							<p class="fragment" id="trendLineStep2" style="color: rgb(100, 200, 100)">\(y = 0x^2 + 3x +
-								0\)
-							</p>
-							<p class="fragment" id="trendLineStep3" style="color: rgb(54, 162, 235)">\(y = 0.2x^2 + 0.3x
-								+
-								0\)</p>
-							<!-- katex matix of the weights -->
-							<p data-id="matrix-formula" class="fragment" style="color: rgb(54, 162, 235)">\(y =
-								\begin{bmatrix} x^2 & x^1 & x^0
-								\end{bmatrix}\ \begin{bmatrix} 0.2 \\ 0.3 \\ 0 \end{bmatrix}\)</p>
-						</div>
-						<canvas id="scatterChart"></canvas>
-						<img class="fragment" src="img/pink_house.png"
-							style="position: absolute; top: 50px; left: 600px; width: 300px;">
-						<img class="fragment" src="img/simpsons_house.webp"
-							style="position: absolute; bottom: 50px; right: 0px; width: 625px;">
-					</div>
-					<script defer>
-						document.addEventListener('DOMContentLoaded', () => {
-							const ctx = document.getElementById('scatterChart');
-							const data = [];
-							for (let x = 0; x <= 20; x += Math.random() + 0.2) {
-								const noise = (Math.random() - 0.5) * 10;
-								const y = 0.2 * x * x + 0.3 * x + noise;
-								data.push({ x, y });
-							}
+				<!-- Mermaid.js Library -->
+				<script type="module">
+					import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+					mermaid.initialize({
+						startOnLoad: true,
+						flowchart: {
+							curve: 'linear',
+							htmlLabels: true
+						},
+						themeVariables: {
+							'lineColor': '#FFF',
+							'edgeLabelBackground': 'transparent',
+							'labelTextColor': '#FFF'
+						}
+					});
+				</script>
+				<!-- Slide: Full Flowchart -->
+				<section>
+					<style>
+						.edgeLabels span {
+							color: #FFF !important;
+							background-color: #111111 !important;
+							font-size: 3rem;
+						}
+					</style>
+					<div class="mermaid r-stretch">
+						flowchart TD
+						classDef default fill:#fff, stroke:#000, stroke-width:2px, font-size:3.5rem, font-weight:bold
 
-							// add outlier
-							data.push({ x: 12.5, y: 5 });
+						B[Test Dataset]
+						A[Random Formula Mutator]
+						C[Formula Evaluation]
 
-							const myChart = new Chart(ctx, {
-								type: 'scatter',
-								data: {
-									datasets: [{
-										data,
-										backgroundColor: 'rgb(255, 99, 132)',
-										pointRadius: 10
-									}]
-								},
-								options: {
-									scales: {
-										x: { display: false },
-										y: { display: false }
-									},
-									plugins: {
-										legend: { display: false },
-										tooltip: { enabled: false }
-									}
-								}
-							});
-
-							// Define incremental lines
-							const lineData1 = [];
-							const lineData2 = [];
-							const lineData3 = [];
-
-							// for values in data
-
-							min_x = Math.min(...data.map(d => d.x));
-							max_x = Math.max(...data.map(d => d.x));
-							for (let x = min_x; x <= max_x + 1; x++) {
-								lineData1.push({ x, y: 30 });
-								lineData2.push({ x, y: 3 * x });
-								lineData3.push({ x, y: 0.2 * x * x + 0.3 * x });
-							}
-
-							function addLine(label, lineData, color) {
-								myChart.data.datasets.push({
-									type: 'line',
-									label,
-									data: lineData,
-									borderColor: color,
-									borderWidth: 3,
-									pointRadius: 0
-								});
-								myChart.update();
-							}
-
-							function removeLine(label) {
-								myChart.data.datasets = myChart.data.datasets.filter(ds => ds.label !== label);
-								myChart.update();
-							}
-
-							if (typeof Reveal !== 'undefined') {
-								Reveal.addEventListener('fragmentshown', event => {
-									switch (event.fragment.id) {
-										case 'trendLineStep1':
-											addLine('step1', lineData1, 'rgb(200, 200, 200)');
-											break;
-										case 'trendLineStep2':
-											addLine('step2', lineData2, 'rgb(100, 200, 100)');
-											break;
-										case 'trendLineStep3':
-											addLine('step3', lineData3, 'rgb(54, 162, 235)');
-											break;
-									}
-								});
-								Reveal.addEventListener('fragmenthidden', event => {
-									switch (event.fragment.id) {
-										case 'trendLineStep1':
-											removeLine('step1');
-											break;
-										case 'trendLineStep2':
-											removeLine('step2');
-											break;
-										case 'trendLineStep3':
-											removeLine('step3');
-											break;
-									}
-								});
-							}
-						});
-					</script>
-				</section>
-				<section data-auto-animate>
-					<div class="r-vstack">
-						<p class="fragment" style="color: rgb(54, 162, 235)">\(P = \begin{bmatrix} Size & Location &
-							Quality
-							\end{bmatrix}\ \begin{bmatrix} 0.2 \\ 0.3 \\ 0 \end{bmatrix}\)</p>
-						<p class="fragment" style="color: rgb(54, 162, 235)">\(w_1 \cdot Size + w_2 \cdot Location + w_3
-							\cdot
-							Quality =
-							Price\)</p>
-						<br>
-						<div class="fragment r-hstack">
-							<div class="r-vstack">
-								<p>Size</p>
-								<p>Location</p>
-								<p>Quality</p>
-							</div>
-							<svg width="400" height="300">
-								<!-- Input layer nodes -->
-								<circle cx="50" cy="80" r="15" fill="white"></circle>
-								<circle cx="50" cy="150" r="15" fill="white"></circle>
-								<circle cx="50" cy="220" r="15" fill="white"></circle>
-
-								<line x1="60" y1="80" x2="185" y2="150" stroke="white" stroke-width="4" />
-								<line x1="60" y1="150" x2="190" y2="150" stroke="white" stroke-width="10" />
-								<line x1="60" y1="220" x2="185" y2="150" stroke="white" stroke-width="1" />
-
-								<circle cx="200" cy="150" r="15" fill="white"></circle>
-
-								<!-- Uncommented hidden and output layer elements -->
-								<g class="fragment fade-in">
-									<!-- Hidden layer nodes -->
-									<circle cx="200" cy="80" r="15" fill="white"></circle>
-									<circle cx="200" cy="150" r="15" fill="white"></circle>
-									<circle cx="200" cy="220" r="15" fill="white"></circle>
-
-									<!-- Output layer nodes -->
-									<circle cx="350" cy="150" r="15" fill="white"></circle>
-
-
-									<!-- Additional connection lines -->
-									<line x1="215" y1="80" x2="335" y2="150" stroke="white" stroke-width="6" />
-									<line x1="215" y1="150" x2="335" y2="150" stroke="white" stroke-width="5" />
-									<line x1="215" y1="220" x2="335" y2="150" stroke="white" stroke-width="1" />
-
-									<line x1="65" y1="80" x2="185" y2="80" stroke="white" stroke-width="7" />
-									<line x1="65" y1="80" x2="185" y2="220" stroke="white" stroke-width="6" />
-									<line x1="65" y1="150" x2="185" y2="80" stroke="white" stroke-width="5" />
-									<line x1="65" y1="150" x2="185" y2="220" stroke="white" stroke-width="7" />
-									<line x1="65" y1="220" x2="185" y2="80" stroke="white" stroke-width="4" />
-									<line x1="65" y1="220" x2="185" y2="220" stroke="white" stroke-width="4" />
-								</g>
-							</svg>
-							<p>Estimated Price</p>
-						</div>
-
-						<br>
-
-						<p class="fragment">\(\begin{bmatrix} Size & Location & Quality
-							\end{bmatrix}\
-							\begin{bmatrix} w_{11} & w_{12} & w_{13} \\ w_{21} & w_{22} & w_{23} \\ w_{31} & w_{32} &
-							w_{33}
-							\end{bmatrix}\ \begin{bmatrix} w_{41} \\ w_{42} \\ w_{43} \end{bmatrix} = Price\)</p>
-					</div>
-					<!-- add an aside -->
-					<aside class="notes">
-						<p>replace x with...</p>
-						<p>single layer => ply wood sheets</p>
-					</aside>
-				</section>
-				<section data-auto-animate>
-					<div class="r-vstack">
-						<svg width="400" height="300">
-							<!-- Input layer nodes -->
-							<circle cx="50" cy="80" r="15" fill="white"></circle>
-							<circle cx="50" cy="150" r="15" fill="white"></circle>
-							<circle cx="50" cy="220" r="15" fill="white"></circle>
-
-							<line x1="60" y1="80" x2="185" y2="150" stroke="white" stroke-width="4" />
-							<line x1="60" y1="150" x2="190" y2="150" stroke="white" stroke-width="10" />
-							<line x1="60" y1="220" x2="185" y2="150" stroke="white" stroke-width="1" />
-
-							<circle cx="200" cy="150" r="15" fill="white"></circle>
-
-							<!-- Uncommented hidden and output layer elements -->
-
-							<!-- Hidden layer nodes -->
-							<circle cx="200" cy="80" r="15" fill="white"></circle>
-							<circle cx="200" cy="150" r="15" fill="white"></circle>
-							<circle cx="200" cy="220" r="15" fill="white"></circle>
-
-							<!-- Output layer nodes -->
-							<circle cx="350" cy="150" r="15" fill="white"></circle>
-
-
-							<!-- Additional connection lines -->
-							<line x1="215" y1="80" x2="335" y2="150" stroke="white" stroke-width="6" />
-							<line x1="215" y1="150" x2="335" y2="150" stroke="white" stroke-width="5" />
-							<line x1="215" y1="220" x2="335" y2="150" stroke="white" stroke-width="1" />
-
-							<line x1="65" y1="80" x2="185" y2="80" stroke="white" stroke-width="7" />
-							<line x1="65" y1="80" x2="185" y2="220" stroke="white" stroke-width="6" />
-							<line x1="65" y1="150" x2="185" y2="80" stroke="white" stroke-width="5" />
-							<line x1="65" y1="150" x2="185" y2="220" stroke="white" stroke-width="7" />
-							<line x1="65" y1="220" x2="185" y2="80" stroke="white" stroke-width="4" />
-							<line x1="65" y1="220" x2="185" y2="220" stroke="white" stroke-width="4" />
-						</svg>
-
-						<p>\(\begin{bmatrix} Size & Location & Quality
-							\end{bmatrix}\
-							\begin{bmatrix} w_{11} & w_{12} & w_{13} \\ w_{21} & w_{22} & w_{23} \\ w_{31} & w_{32} &
-							w_{33}
-							\end{bmatrix}\ \begin{bmatrix} w_{41} \\ w_{42} \\ w_{43} \end{bmatrix} = Price\)
-						</p>
-						<p>\(\begin{bmatrix} Smile & For & The
-							\end{bmatrix}\
-							\begin{bmatrix} w_{11} & w_{12} & w_{13} \\ w_{21} & w_{22} & w_{23} \\ w_{31} & w_{32} &
-							w_{33}
-							\end{bmatrix}\ \begin{bmatrix} w_{41} \\ w_{42} \\ w_{43} \end{bmatrix} = Camera\)
-						</p>
+						A ---> C
+						B ---> C
+						C -- keep best --> A
 					</div>
 					<aside class="notes">
-						<p>You can't multiply words</p>
-						<p>words have complex interactions Smile you're on camera</p>
+						<p>one generic formula, just adjust it's output based on loss</p>
 					</aside>
+				</section>
+				<section>
+					<p>\(\begin{bmatrix} Size & Location & Quality
+						\end{bmatrix}\
+						\begin{bmatrix} w_{11} & w_{12} & w_{13} \\ w_{21} & w_{22} & w_{23} \\ w_{31} & w_{32} &
+						w_{33}
+						\end{bmatrix}\ \begin{bmatrix} w_{41} \\ w_{42} \\ w_{43} \end{bmatrix} = Price\)</p>
+
+					<svg width="400" height="300">
+						<!-- Input layer nodes -->
+						<circle cx="50" cy="80" r="15" fill="white"></circle>
+						<circle cx="50" cy="150" r="15" fill="white"></circle>
+						<circle cx="50" cy="220" r="15" fill="white"></circle>
+
+						<line x1="60" y1="80" x2="185" y2="150" stroke="white" stroke-width="4" />
+						<line x1="60" y1="150" x2="190" y2="150" stroke="white" stroke-width="10" />
+						<line x1="60" y1="220" x2="185" y2="150" stroke="white" stroke-width="1" />
+
+						<circle cx="200" cy="150" r="15" fill="white"></circle>
+
+						<!-- Uncommented hidden and output layer elements -->
+
+						<!-- Hidden layer nodes -->
+						<circle cx="200" cy="80" r="15" fill="white"></circle>
+						<circle cx="200" cy="150" r="15" fill="white"></circle>
+						<circle cx="200" cy="220" r="15" fill="white"></circle>
+
+						<!-- Output layer nodes -->
+						<circle cx="350" cy="150" r="15" fill="white"></circle>
+
+
+						<!-- Additional connection lines -->
+						<line x1="215" y1="80" x2="335" y2="150" stroke="white" stroke-width="6" />
+						<line x1="215" y1="150" x2="335" y2="150" stroke="white" stroke-width="5" />
+						<line x1="215" y1="220" x2="335" y2="150" stroke="white" stroke-width="1" />
+
+						<line x1="65" y1="80" x2="185" y2="80" stroke="white" stroke-width="7" />
+						<line x1="65" y1="80" x2="185" y2="220" stroke="white" stroke-width="6" />
+						<line x1="65" y1="150" x2="185" y2="80" stroke="white" stroke-width="5" />
+						<line x1="65" y1="150" x2="185" y2="220" stroke="white" stroke-width="7" />
+						<line x1="65" y1="220" x2="185" y2="80" stroke="white" stroke-width="4" />
+						<line x1="65" y1="220" x2="185" y2="220" stroke="white" stroke-width="4" />
+
+					</svg>
+					<aside class="notes">
+						<p>state of the art has ~1T weights</p>
+						<p>LLMs need to tokenize</p>
 				</section>
 				<section>
 					<iframe width="1920px" height="1080px" src="https://tiktokenizer.vercel.app/?model=ada"
@@ -562,9 +416,9 @@
 					<iframe width="1920px" height="1080px" src="https://bbycroft.net/llm"></iframe>
 					<a href="https://bbycroft.net/llm">https://bbycroft.net/llm</a>
 					<aside class="notes">
-						<p>SolidGoldMagikarp</p>
 						<p>"r"s in straberry</p>
 						<p>rhyming</p>
+						<p>SolidGoldMagikarp</p>
 					</aside>
 				</section>
 
@@ -574,8 +428,8 @@
 				<!-- 3b1b intro to LLMs https://www.youtube.com/watch?v=LPZh9BOjkQs -->
 				<!-- 3b1b playlist of NN videos https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi -->
 			</section>
-				
-			
+
+
 			<!-- Environmental -->
 			<section>
 				<section>
@@ -699,7 +553,7 @@
 					</aside>
 				</section>
 			</section>
-			
+
 			<!--              -->
 			<!-- IMPACT       -->
 			<!--              -->
@@ -916,7 +770,7 @@
 				</section>
 			</section>
 
-			
+
 			<!-- Biomedical -->
 			<section>
 				<section>
@@ -1132,9 +986,10 @@
 
 			<section>
 				<div class="r-vstack">
-				<h2>Interested in more?</h2>
-				<img src="img/yt_playlist.png" height="800">
-				<a href="https://www.youtube.com/@mullinmax/playlists">https://www.youtube.com/@mullinmax/playlists</a>
+					<h2>Interested in more?</h2>
+					<img src="img/yt_playlist.png" height="800">
+					<a
+						href="https://www.youtube.com/@mullinmax/playlists">https://www.youtube.com/@mullinmax/playlists</a>
 				</div>
 			</section>
 
@@ -1597,6 +1452,7 @@
 		<script src="plugin/highlight/highlight.js"></script>
 		<script src="plugin/math/math.js"></script>
 		<script src="plugin/tagteam/tagteam.js"></script>
+
 
 		<script>
 			// Also available as an ES module, see:
